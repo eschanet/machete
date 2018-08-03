@@ -1,3 +1,4 @@
+from array import array
 import ROOT
 
 def set_palette(name='palette', ncontours=999):
@@ -23,5 +24,5 @@ def set_palette(name='palette', ncontours=999):
     b = array('d', blue)
 
     npoints = len(s)
-    TColor.CreateGradientColorTable(npoints, s, r, g, b, ncontours)
-    gStyle.SetNumberContours(ncontours)
+    ROOT.TColor.CreateGradientColorTable(npoints, s, r, g, b, ncontours)
+    ROOT.gStyle.SetNumberContours(ncontours)
