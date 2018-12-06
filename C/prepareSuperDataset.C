@@ -6,9 +6,9 @@ void prepareSuperDataset() {
 
     enum Campaign { MC16a, MC16d, MC16e, Last };
 
-    const std::string MC16A_PATH = "/project/etp4/eschanet/ntuples/common/mc16d/_test/allTrees_v1_19_mc16a.root";
+    const std::string MC16A_PATH = "/project/etp4/eschanet/ntuples/common/mc16d/_test/allTrees_v1_19_mc16.root";
     const std::string MC16D_PATH = "/project/etp4/eschanet/ntuples/common/mc16d/_test/allTrees_v1_19_mc16d.root";
-    const std::string MC16E_PATH = "/project/etp4/eschanet/ntuples/common/mc16d/_test/allTrees_v1_19_mc16e.root";
+    const std::string MC16E_PATH = "/project/etp4/eschanet/ntuples/common/mc16d/_test/allTrees_v1_19_mc16.root";
 
     const double MC16A_LUMI = 36.08116;
     const double MC16D_LUMI = 44.3074;
@@ -39,13 +39,20 @@ void prepareSuperDataset() {
                 lumi = MC16E_LUMI;
                 break;
             default :
-                std::cout << "WARNING  -  Not a known campaign, aborting!" << std::endl;
                 unknown_campaign = true;
                 break;
 
         }
 
-        if (unknown_campaign) break;
+        if (unknown_campaign)  {
+            std::cout << "WARNING  -  Not a known campaign, skipping!" << std::endl;
+            continue;
+        }
+
+        if (access( path.c_str(), F_OK ) == -1) {
+            std::cout << "WARNING  -  File " << path <<" not existing, skipping!" << std::endl;
+            continue;
+        }
 
         TFile *old_file = new TFile(path.c_str());
         std::string new_file_path = std::regex_replace(path, std::regex("\\.root"), "_scaled.root");
