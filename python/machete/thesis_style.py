@@ -3,6 +3,7 @@
 import ROOT
 from MPF.atlasStyle import setAtlasStyle
 from MPF import globalStyle as gst
+import MPF.vars_mpf as vars
 import collections
 
 gst.drawATLASLabel = False
