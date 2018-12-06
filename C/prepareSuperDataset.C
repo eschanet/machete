@@ -2,8 +2,6 @@
 #include <iostream>
 #include <regex>
 
-
-
 void prepareSuperDataset() {
 
     enum Campaign { MC16a, MC16d, MC16e, Last };
@@ -13,14 +11,11 @@ void prepareSuperDataset() {
     const std::string MC16E_PATH = "/project/etp4/eschanet/ntuples/common/mc16d/_test/allTrees_v1_19_mc16e.root";
 
     const double MC16A_LUMI = 36.08116;
-    const double MC16D_LUMI = 43.5844;
-    const double MC16E_LUMI = 36.08116;
+    const double MC16D_LUMI = 44.3074;
+    const double MC16E_LUMI = 59.9372;
 
     const double TOTAL_LUMI = MC16A_LUMI + MC16D_LUMI + MC16E_LUMI;
 
-    //MC campaigns to run over
-
-    bool is_mc16a;
     bool is_data;
     double genweight, mc16a, mc16d, mc16e;
 
@@ -82,21 +77,21 @@ void prepareSuperDataset() {
             TBranch *branch_mc16d = new_tree->Branch("mc16d", &mc16d, "mc16d/D");
             TBranch *branch_mc16e = new_tree->Branch("mc16e", &mc16e, "mc16e/D");
 
-            std::cout << "Processing: " << key->GetName() << " " << std::endl;
-            std::cout << n_entries << " events" << std::endl;
+            std::cout << "INFO  -  Starting to process: " << key->GetName() << " with " << n_entries << " events"<< std::endl;
+
+            double mc16a_sf =  MC16A_LUMI/TOTAL_LUMI;
+            double mc16d_sf =  MC16D_LUMI/TOTAL_LUMI;
+            double mc16e_sf =  MC16E_LUMI/TOTAL_LUMI;
+
+            if (is_data){
+                mc16a_sf =  1;
+                mc16d_sf =  1;
+                mc16e_sf =  1;
+            }
 
             for (Long64_t i=0;i<n_entries; i++) {
                 old_tree->GetEntry(i);
 
-                double mc16a_sf =  MC16A_LUMI/TOTAL_LUMI;
-                double mc16d_sf =  MC16D_LUMI/TOTAL_LUMI;
-                double mc16e_sf =  MC16E_LUMI/TOTAL_LUMI;
-
-                if (!is_data){
-                    mc16a_sf =  1;
-                    mc16d_sf =  1;
-                    mc16e_sf =  1;
-                }
                 switch (campaign) {
                     case MC16a :
                         genweight *= mc16a_sf;
@@ -121,7 +116,7 @@ void prepareSuperDataset() {
                 }
 
                 if (i % 1000000 == 0) {
-                    std::cout << key->GetName() <<"INFO  -  Processed " << scientific << i/1000000 <<" mio. events" << std::endl;
+                    std::cout <<"INFO  -  Processed " << scientific << i/1000000 <<" mio." << key->GetName() << " events" << std::endl;
                 }
 
                 new_tree->Fill();
