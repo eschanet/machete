@@ -6,16 +6,11 @@
 
 void prepareSuperDataset() {
 
-    enum class Campaign {
-        MC16a,
-        MC16d,
-        MC16e,
-        Last
-    };
+    enum Campaign { MC16a, MC16d, MC16e, Last };
 
-    const std::string MC16A_PATH = "/project/etp4/eschanet/1L/ntuples/mc16a/v1-19/merged/allTrees_v1_19_mc16a.root";
-    const std::string MC16D_PATH = "/project/etp4/eschanet/1L/ntuples/mc16d/v1-19/merged/allTrees_v1_19_mc16d.root";
-    const std::string MC16E_PATH = "/project/etp4/eschanet/1L/ntuples/mc16a/v1-19/merged/allTrees_v1_19_mc16e.root";
+    const std::string MC16A_PATH = "/project/etp4/eschanet/ntuples/common/mc16d/_test/allTrees_v1_19_mc16a.root";
+    const std::string MC16D_PATH = "/project/etp4/eschanet/ntuples/common/mc16d/_test/allTrees_v1_19_mc16d.root";
+    const std::string MC16E_PATH = "/project/etp4/eschanet/ntuples/common/mc16d/_test/allTrees_v1_19_mc16e.root";
 
     const double MC16A_LUMI = 36.08116;
     const double MC16D_LUMI = 43.5844;
@@ -24,27 +19,38 @@ void prepareSuperDataset() {
     const double TOTAL_LUMI = MC16A_LUMI + MC16D_LUMI + MC16E_LUMI;
 
     //MC campaigns to run over
-    std::string tags[] = {mc16a_path,mc16d_path};
 
     bool is_mc16a;
     bool is_data;
     double genweight, mc16a, mc16d, mc16e;
 
-    for (int campaign = Campaign::MC16a; campaign != Campaign::Last; ++campaign) {
+    for (int campaignInt = MC16a; campaignInt != Last; campaignInt++) {
 
+        Campaign campaign = static_cast<Campaign>(campaignInt);
         std::string path;
         double lumi;
+        bool unknown_campaign = false;
         switch (campaign) {
-            case Campaign::MC16a : path = MC16A_PATH;
-                                   lumi = MC16A_LUMI;
-                                   break;
-            case Campaign::MC16d : path = MC16D_PATH;
-                                   lumi = MC16D_LUMI;
-                                   break;
-            case Campaign::MC16e : path = MC16E_PATH;
-                                   lumi = MC16E_LUMI;
-                                   break;
+            case Campaign::MC16a :
+                path = MC16A_PATH;
+                lumi = MC16A_LUMI;
+                break;
+            case Campaign::MC16d :
+                path = MC16D_PATH;
+                lumi = MC16D_LUMI;
+                break;
+            case Campaign::MC16e :
+                path = MC16E_PATH;
+                lumi = MC16E_LUMI;
+                break;
+            default :
+                std::cout << "WARNING  -  Not a known campaign, aborting!" << std::endl;
+                unknown_campaign = true;
+                break;
+
         }
+
+        if (unknown_campaign) break;
 
         TFile *old_file = new TFile(path.c_str());
         std::string new_file_path = std::regex_replace(path, std::regex("\\.root"), "_scaled.root");
@@ -67,14 +73,14 @@ void prepareSuperDataset() {
 
             TTree* old_tree = (TTree*)old_file->Get(key->GetName());
             Long64_t n_entries = old_tree->GetEntries();
-            old_tree->SetBranchAddress("genweight",&genweight);
+            old_tree->SetBranchAddress("genWeight",&genweight);
 
             TTree *new_tree = old_tree->CloneTree(0);
             if (is_data) new_tree->SetName("data");
 
             TBranch *branch_mc16a = new_tree->Branch("mc16a", &mc16a, "mc16a/D");
             TBranch *branch_mc16d = new_tree->Branch("mc16d", &mc16d, "mc16d/D");
-            TBranch *branch_mc16d = new_tree->Branch("mc16e", &mc16e, "mc16e/D");
+            TBranch *branch_mc16e = new_tree->Branch("mc16e", &mc16e, "mc16e/D");
 
             std::cout << "Processing: " << key->GetName() << " " << std::endl;
             std::cout << n_entries << " events" << std::endl;
@@ -92,21 +98,27 @@ void prepareSuperDataset() {
                     mc16e_sf =  1;
                 }
                 switch (campaign) {
-                    case Campaign::MC16a : genweight *= mc16a_sf;
-                                           mc16a = 1/mc16a_sf;
-                                           mc16d = 0;
-                                           mc16e = 0;
-                                           break;
-                    case Campaign::MC16a : genweight *= mc16d_sf;
-                                           mc16a = 0;
-                                           mc16d = 1/mc16d_sf;
-                                           mc16e = 0;
-                                           break;
-                    case Campaign::MC16a : genweight *= mc16e_sf;
-                                           mc16a = 0;
-                                           mc16d = 0;
-                                           mc16e = 1/mc16e_sf;
-                                           break;
+                    case MC16a :
+                        genweight *= mc16a_sf;
+                        mc16a = 1/mc16a_sf;
+                        mc16d = 0;
+                        mc16e = 0;
+                        break;
+                    case MC16d :
+                        genweight *= mc16d_sf;
+                        mc16a = 0;
+                        mc16d = 1/mc16d_sf;
+                        mc16e = 0;
+                        break;
+                    case MC16e :
+                        genweight *= mc16e_sf;
+                        mc16a = 0;
+                        mc16d = 0;
+                        mc16e = 1/mc16e_sf;
+                        break;
+                    default :
+                        break;
+                }
 
                 if (i % 1000000 == 0) {
                     std::cout << key->GetName() <<"INFO  -  Processed " << scientific << i/1000000 <<" mio. events" << std::endl;
