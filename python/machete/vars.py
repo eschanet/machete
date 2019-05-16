@@ -99,8 +99,8 @@ jet1Pt = {
 
 jet2Pt = {
     "varexp" : "jet2Pt",
-    "xmin" : 25,
-    "xmax" : 1000,
+    "xmin" : 30,
+    "xmax" : 1030,
     "nbins" : 20,
     "unit" : "GeV",
     "xTitle" : "p_{T}^{jet2}",
@@ -108,8 +108,8 @@ jet2Pt = {
 
 jet3Pt = {
     "varexp" : "jet3Pt",
-    "xmin" : 25,
-    "xmax" : 600,
+    "xmin" : 30,
+    "xmax" : 630,
     "nbins" : 20,
     "unit" : "GeV",
     "xTitle" : "p_{T}^{jet3}",
@@ -117,11 +117,29 @@ jet3Pt = {
 
 jet4Pt = {
     "varexp" : "jet4Pt",
-    "xmin" : 25,
-    "xmax" : 600,
+    "xmin" : 30,
+    "xmax" : 630,
     "nbins" : 20,
     "unit" : "GeV",
     "xTitle" : "p_{T}^{jet4}",
+}
+
+bjet1Pt = {
+    "varexp" : "bJet1Pt",
+    "xmin" : 30,
+    "xmax" : 2030,
+    "nbins" : 20,
+    "unit" : "GeV",
+    "xTitle" : "p_{T}^{b-jet1}",
+}
+
+bjet2Pt = {
+    "varexp" : "bJet2Pt",
+    "xmin" : 30,
+    "xmax" : 1030,
+    "nbins" : 20,
+    "unit" : "GeV",
+    "xTitle" : "p_{T}^{b-jet2}",
 }
 
 mt = {
@@ -151,12 +169,12 @@ njet = {
     "unit" : None,
 }
 
-nbjet25 = {
-   "varexp" : "nBJet25_MV2c10",
-    "xmin" : 0.5,
+nbjet30 = {
+   "varexp" : "nBJet30_MV2c10",
+    "xmin" : -0.5,
     "xmax" : 4.5,
-    "nbins" : 4,
-    "xTitle" : "N_{bjet}^{25}",
+    "nbins" : 5,
+    "xTitle" : "N_{bjet}^{30}",
     "unit" : None,
 }
 
@@ -186,6 +204,24 @@ mu = {
     "unit" : None,
 }
 
+actual_mu = {
+    "varexp" : "actual_mu",
+    "xmin" : 0,
+    "xmax" : 80,
+    "nbins" : 80,
+    "xTitle" : "actual #mu",
+    "unit" : None,
+}
+
+combined_mu = {
+    "varexp" : "(RandomRunNumber >= 276262 && RandomRunNumber <= 320000) ? mu : actual_mu",
+    "xmin" : 0,
+    "xmax" : 80,
+    "nbins" : 80,
+    "xTitle" : "#mu",
+    "unit" : None,
+}
+
 nVtx = {
     "varexp" : "nVtx",
     "xmin" : 0,
@@ -205,10 +241,10 @@ ptmetlep = {
 }
 
 mct = {
-    "varexp" : "mct",
-    "xmin" : 0,
+    "varexp" : "mct2",
+    "xmin" : 30,
     "xmax" : 600,
-    "nbins" : 20,
+    "nbins" : 19,
     "unit" : "GeV",
     "xTitle" : "m_{CT}",
 }
@@ -230,6 +266,16 @@ mjj = {
     "unit" : "GeV",
     "xTitle" : "m_{jj}",
 }
+
+mlb1 = {
+    "varexp" : "mlb1",
+    "xmin" : 20,
+    "xmax" : 500,
+    "nbins" : 19,
+    "unit" : "GeV",
+    "xTitle" : "m_{l,b1}",
+}
+
 
 dRJet = {
     "varexp" : "dRJet",
@@ -257,35 +303,3 @@ metsig = {
     "xTitle" : "E_{T}^{miss} significance",
     "unit" : "GeV",
 }
-
-
-varsDict = {}
-varsDict['met'] = met
-# varsDict['hardmet'] = hardmet
-varsDict['lep1Pt'] = lep1Pt
-# varsDict['lep1Pt_soft'] = lep1Pt_soft
-varsDict['lep1Eta'] = lep1Eta
-varsDict['jet1Eta'] = jet1Eta
-varsDict['meff'] = meff
-varsDict['met_over_meff'] = met_over_meff
-varsDict['ht'] = ht
-varsDict['jet1Pt'] = jet1Pt
-varsDict['jet2Pt'] = jet2Pt
-varsDict['jet3Pt'] = jet3Pt
-varsDict['jet4Pt'] = jet4Pt
-varsDict['mt'] = mt
-varsDict['mct'] = mct
-# varsDict['mt_soft'] = mt_soft
-varsDict['njet'] = njet
-varsDict['nbjet25'] = nbjet25
-# varsDict['njet4'] = njet4
-varsDict['aplanarity'] = aplanarity
-varsDict['mu'] = mu
-varsDict['nVtx'] = nVtx
-varsDict['ptmetlep'] = ptmetlep
-varsDict['meff_all'] = meff_all
-varsDict['met_Sig'] = metsig
-varsDict['mjj'] = mjj
-varsDict['mbb'] = mbb
-varsDict['dRJet'] = dRJet
-varsDict['dphimetlep'] = dphimetlep
