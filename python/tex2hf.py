@@ -25,7 +25,6 @@ parser.add_argument('-r', '--regions', nargs='+', help='List of regions of inter
 
 args = parser.parse_args()
 
-print(args)
 if len(args.backgrounds) == 0:
     logger.error('No background processes given! Dropping out.')
     sys.exit()
@@ -208,23 +207,14 @@ def TheorUnc(generatorSyst):
                generatorSyst.append((("{bkg}","SRLMEM"), {bkg}Systematics[key]))
                generatorSyst.append((("{bkg}","SRLMEl"), {bkg}Systematics[key]))
                generatorSyst.append((("{bkg}","SRLMMu"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","SRLMinclEM"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","SRLMinclEl"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","SRLMinclMu"), {bkg}Systematics[key]))
            elif "SRMM" in name:
                generatorSyst.append((("{bkg}","SRMMEM"), {bkg}Systematics[key]))
                generatorSyst.append((("{bkg}","SRMMEl"), {bkg}Systematics[key]))
                generatorSyst.append((("{bkg}","SRMMMu"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","SRMMinclEM"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","SRMMinclEl"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","SRMMinclMu"), {bkg}Systematics[key]))
            elif "SRHM" in name:
                generatorSyst.append((("{bkg}","SRHMEM"), {bkg}Systematics[key]))
                generatorSyst.append((("{bkg}","SRHMEl"), {bkg}Systematics[key]))
                generatorSyst.append((("{bkg}","SRHMMu"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","SRHMinclEM"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","SRHMinclEl"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","SRHMinclMu"), {bkg}Systematics[key]))
            elif "TRLM" in name:
                generatorSyst.append((("{bkg}","TRLMEM"), {bkg}Systematics[key]))
            elif "TRMM" in name:
