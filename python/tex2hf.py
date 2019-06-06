@@ -64,16 +64,19 @@ def pairwise(iterable):
     return zip(a, b)
 
 def getRegionFromExpression(expr):
-    if expr == 'SRLM' or expr == 'SRMM' or expr == 'SRHM':
-        return 0
-    if expr == 'SRLMincl' or expr == 'SRMMincl' or expr == 'SRHMincl':
+    if args.analysis == '1Lbb':
+        if expr == 'SRLM' or expr == 'SRMM' or expr == 'SRHM':
+            return 0
+        if expr == 'SRLMincl' or expr == 'SRMMincl' or expr == 'SRHMincl':
+            return expr
+        if 'SRLM' in expr:
+            return 'SRLM'
+        if 'SRMM' in expr:
+            return 'SRMM'
+        if 'SRHM' in expr:
+            return 'SRHM'
+    elif args.analaysis == 'strong1L':
         return expr
-    if 'SRLM' in expr:
-        return 'SRLM'
-    if 'SRMM' in expr:
-        return 'SRMM'
-    if 'SRHM' in expr:
-        return 'SRHM'
     for region in args.regions:
         if expr == region:
             return expr
@@ -195,7 +198,15 @@ gSystem.Load("libSusyFitter.so")
 
 from systematic import Systematic
 from configManager import configMgr
+'''
 
+if args.analysis == 'strong1L':
+    header += r'''
+Regions = [ 'BVEM', 'BTEM' ]
+MeffBins = [ '_bin1', '_bin2', '_bin3', '_bin4']
+'''
+
+header += r'''
 {}Systematics={{}}
 '''.format(background)
 
@@ -227,69 +238,234 @@ for sys,d in values.items():
         main += '''{bkg}Systematics['{bkg}{syst}_{region}'] = Systematic("{bkg}{syst}", configMgr.weights, [{ups}], [{downs}], "user","userHistoSys")
 '''.format(bkg = background, syst = sys, region = region, ups=ups, downs=downs)
 
+if args.analysis == '1Lbb':
 
-footer = r'''
+    footer = r'''
 def TheorUnc(generatorSyst):
     for key in {bkg}Systematics:
-           name=key.split('_')[-1]
+        name=key.split('_')[-1]
 
-            if "SRLMincl" in name:
-                generatorSyst.append((("{bkg}","SRLMinclEM"), {bkg}Systematics[key]))
-            elif "SRMMincl" in name:
-                generatorSyst.append((("{bkg}","SRMMinclEM"), {bkg}Systematics[key]))
-            elif "SRHMincl" in name:
-                generatorSyst.append((("{bkg}","SRHMinclEM"), {bkg}Systematics[key]))
-            elif "SRLM" in name:
-                generatorSyst.append((("{bkg}","SRLMEM"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","SRLMEl"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","SRLMMu"), {bkg}Systematics[key]))
-            elif "SRMM" in name:
-                generatorSyst.append((("{bkg}","SRMMEM"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","SRMMEl"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","SRMMMu"), {bkg}Systematics[key]))
-            elif "SRHM" in name:
-                generatorSyst.append((("{bkg}","SRHMEM"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","SRHMEl"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","SRHMMu"), {bkg}Systematics[key]))
-            elif "TRLM" in name:
-                generatorSyst.append((("{bkg}","TRLMEM"), {bkg}Systematics[key]))
-            elif "TRMM" in name:
-                generatorSyst.append((("{bkg}","TRMMEM"), {bkg}Systematics[key]))
-            elif "TRHM" in name:
-                generatorSyst.append((("{bkg}","TRHMEM"), {bkg}Systematics[key]))
-            elif "WR" in name:
-                generatorSyst.append((("{bkg}","WREM"), {bkg}Systematics[key]))
-            elif "STCR" in name:
-                generatorSyst.append((("{bkg}","STCREM"), {bkg}Systematics[key]))
-            elif "VRtt1on" in name:
-                generatorSyst.append((("{bkg}","VRtt1onEM"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","VRtt1onEl"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","VRtt1onMu"), {bkg}Systematics[key]))
-            elif "VRtt2on" in name:
-                generatorSyst.append((("{bkg}","VRtt2onEM"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","VRtt2onEl"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","VRtt2onMu"), {bkg}Systematics[key]))
-            elif "VRtt3on" in name:
-                generatorSyst.append((("{bkg}","VRtt3onEM"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","VRtt3onEl"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","VRtt3onMu"), {bkg}Systematics[key]))
-            elif "VRtt1off" in name:
-                generatorSyst.append((("{bkg}","VRtt1offEM"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","VRtt1offEl"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","VRtt1offMu"), {bkg}Systematics[key]))
-            elif "VRtt2off" in name:
-                generatorSyst.append((("{bkg}","VRtt2offEM"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","VRtt2offEl"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","VRtt2offMu"), {bkg}Systematics[key]))
-            elif "VRtt3off" in name:
-                generatorSyst.append((("{bkg}","VRtt3offEM"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","VRtt3offEl"), {bkg}Systematics[key]))
-                generatorSyst.append((("{bkg}","VRtt3offMu"), {bkg}Systematics[key]))
+        if "SRLMincl" in name:
+            generatorSyst.append((("{bkg}","SRLMinclEM"), {bkg}Systematics[key]))
+        elif "SRMMincl" in name:
+            generatorSyst.append((("{bkg}","SRMMinclEM"), {bkg}Systematics[key]))
+        elif "SRHMincl" in name:
+            generatorSyst.append((("{bkg}","SRHMinclEM"), {bkg}Systematics[key]))
+        elif "SRLM" in name:
+            generatorSyst.append((("{bkg}","SRLMEM"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","SRLMEl"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","SRLMMu"), {bkg}Systematics[key]))
+        elif "SRMM" in name:
+            generatorSyst.append((("{bkg}","SRMMEM"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","SRMMEl"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","SRMMMu"), {bkg}Systematics[key]))
+        elif "SRHM" in name:
+            generatorSyst.append((("{bkg}","SRHMEM"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","SRHMEl"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","SRHMMu"), {bkg}Systematics[key]))
+        elif "TRLM" in name:
+            generatorSyst.append((("{bkg}","TRLMEM"), {bkg}Systematics[key]))
+        elif "TRMM" in name:
+            generatorSyst.append((("{bkg}","TRMMEM"), {bkg}Systematics[key]))
+        elif "TRHM" in name:
+            generatorSyst.append((("{bkg}","TRHMEM"), {bkg}Systematics[key]))
+        elif "WR" in name:
+            generatorSyst.append((("{bkg}","WREM"), {bkg}Systematics[key]))
+        elif "STCR" in name:
+            generatorSyst.append((("{bkg}","STCREM"), {bkg}Systematics[key]))
+        elif "VRtt1on" in name:
+            generatorSyst.append((("{bkg}","VRtt1onEM"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","VRtt1onEl"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","VRtt1onMu"), {bkg}Systematics[key]))
+        elif "VRtt2on" in name:
+            generatorSyst.append((("{bkg}","VRtt2onEM"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","VRtt2onEl"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","VRtt2onMu"), {bkg}Systematics[key]))
+        elif "VRtt3on" in name:
+            generatorSyst.append((("{bkg}","VRtt3onEM"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","VRtt3onEl"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","VRtt3onMu"), {bkg}Systematics[key]))
+        elif "VRtt1off" in name:
+            generatorSyst.append((("{bkg}","VRtt1offEM"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","VRtt1offEl"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","VRtt1offMu"), {bkg}Systematics[key]))
+        elif "VRtt2off" in name:
+            generatorSyst.append((("{bkg}","VRtt2offEM"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","VRtt2offEl"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","VRtt2offMu"), {bkg}Systematics[key]))
+        elif "VRtt3off" in name:
+            generatorSyst.append((("{bkg}","VRtt3offEM"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","VRtt3offEl"), {bkg}Systematics[key]))
+            generatorSyst.append((("{bkg}","VRtt3offMu"), {bkg}Systematics[key]))
 
+    '''.format(bkg=background)
+
+elif args.analysis == 'strong1L':
+
+        footer = r'''
+def TheorUnc(generatorSyst):
+    for key in {bkg}Systematics:
+           name=key.split('_')
+           name1=name[1]+"_"+name[2]
+
+           if "SR2JBVEM" in name1 and "_bin1" in name1:
+              generatorSyst.append((("Wjets_2J_bin1","SR2JBVEM"), WjetsSystematics[key]))
+           if  "SR2JBVEM" in name1 and "_bin2" in name1:
+              generatorSyst.append((("Wjets_2J_bin2","SR2JBVEM"), WjetsSystematics[key]))
+           if  "SR2JBVEM" in name1 and "_bin3" in name1:
+              generatorSyst.append((("Wjets_2J_bin3","SR2JBVEM"), WjetsSystematics[key]))
+           if  "SR2JBVEM" in name1 and "_bin4" in name1:
+              generatorSyst.append((("Wjets_2J_bin4","SR2JBVEM"), WjetsSystematics[key]))
+
+           if "SR2JBTEM" in name1 and "_bin1" in name1:
+              generatorSyst.append((("Wjets_2J_bin1","SR2JBTEM"), WjetsSystematics[key]))
+           if "SR2JBTEM" in name1 and "_bin2" in name1:
+              generatorSyst.append((("Wjets_2J_bin2","SR2JBTEM"), WjetsSystematics[key]))
+           if "SR2JBTEM" in name1 and "_bin3" in name1:
+              generatorSyst.append((("Wjets_2J_bin3","SR2JBTEM"), WjetsSystematics[key]))
+           if "SR2JBTEM" in name1 and "_bin4" in name1:
+              generatorSyst.append((("Wjets_2J_bin4","SR2JBTEM"), WjetsSystematics[key]))
+
+
+           if "VR2JmtEM" in name1 and "_bin1" in name1:
+              generatorSyst.append((("Wjets_2J_bin1","VR2JmtEM"), WjetsSystematics[key]))
+           if  "VR2JmtEM" in name1 and "_bin2" in name1:
+              generatorSyst.append((("Wjets_2J_bin2","VR2JmtEM"), WjetsSystematics[key]))
+           if  "VR2JmtEM" in name1 and "_bin3" in name1:
+              generatorSyst.append((("Wjets_2J_bin3","VR2JmtEM"), WjetsSystematics[key]))
+           if  "VR2JmtEM" in name1 and "_bin4" in name1:
+              generatorSyst.append((("Wjets_2J_bin4","VR2JmtEM"), WjetsSystematics[key]))
+
+           if "VR2JmetEM" in name1 and "_bin1" in name1:
+              generatorSyst.append((("Wjets_2J_bin1","VR2JmetEM"), WjetsSystematics[key]))
+           if  "VR2JmetEM" in name1 and "_bin2" in name1:
+              generatorSyst.append((("Wjets_2J_bin2","VR2JmetEM"), WjetsSystematics[key]))
+           if  "VR2JmetEM" in name1 and "_bin3" in name1:
+             generatorSyst.append((("Wjets_2J_bin3","VR2JmetEM"), WjetsSystematics[key]))
+           if  "VR2JmetEM" in name1 and "_bin4" in name1:
+             generatorSyst.append((("Wjets_2J_bin4","VR2JmetEM"), WjetsSystematics[key]))
+
+
+           if "SR4JlowxBVEM" in name1 and "_bin1" in name1:
+              generatorSyst.append((("Wjets_4Jlowx_bin1","SR4JlowxBVEM"), WjetsSystematics[key]))
+           if  "SR4JlowxBVEM" in name1 and "_bin2" in name1:
+              generatorSyst.append((("Wjets_4Jlowx_bin2","SR4JlowxBVEM"), WjetsSystematics[key]))
+           if  "SR4JlowxBVEM" in name1 and "_bin3" in name1:
+              generatorSyst.append((("Wjets_4Jlowx_bin3","SR4JlowxBVEM"), WjetsSystematics[key]))
+
+
+           if "SR4JlowxBTEM" in name1 and "_bin1" in name1:
+              generatorSyst.append((("Wjets_4Jlowx_bin1","SR4JlowxBTEM"), WjetsSystematics[key]))
+           if "SR4JlowxBTEM" in name1 and "_bin2" in name1:
+              generatorSyst.append((("Wjets_4Jlowx_bin2","SR4JlowxBTEM"), WjetsSystematics[key]))
+           if "SR4JlowxBTEM" in name1 and "_bin3" in name1:
+              generatorSyst.append((("Wjets_4Jlowx_bin3","SR4JlowxBTEM"), WjetsSystematics[key]))
+
+
+
+           if "VR4JlowxhybridEM" in name1 and "_bin1" in name1:
+              generatorSyst.append((("Wjets_4Jlowx_bin1","VR4JlowxhybridEM"), WjetsSystematics[key]))
+           if  "VR4JlowxhybridEM" in name1 and "_bin2" in name1:
+              generatorSyst.append((("Wjets_4Jlowx_bin2","VR4JlowxhybridEM"), WjetsSystematics[key]))
+           if  "VR4JlowxhybridEM" in name1 and "_bin3" in name1:
+              generatorSyst.append((("Wjets_4Jlowx_bin3","VR4JlowxhybridEM"), WjetsSystematics[key]))
+
+           if "VR4JlowxaplEM" in name1 and "_bin1" in name1:
+              generatorSyst.append((("Wjets_4Jlowx_bin1","VR4JlowxaplEM"), WjetsSystematics[key]))
+           if  "VR4JlowxaplEM" in name1 and "_bin2" in name1:
+              generatorSyst.append((("Wjets_4Jlowx_bin2","VR4JlowxaplEM"), WjetsSystematics[key]))
+           if  "VR4JlowxaplEM" in name1 and "_bin3" in name1:
+             generatorSyst.append((("Wjets_4Jlowx_bin3","VR4JlowxaplEM"), WjetsSystematics[key]))
+
+
+
+
+
+           if "SR4JhighxBVEM" in name1 and "_bin1" in name1:
+              generatorSyst.append((("Wjets_4Jhighx_bin1","SR4JhighxBVEM"), WjetsSystematics[key]))
+           if  "SR4JhighxBVEM" in name1 and "_bin2" in name1:
+              generatorSyst.append((("Wjets_4Jhighx_bin2","SR4JhighxBVEM"), WjetsSystematics[key]))
+           if  "SR4JhighxBVEM" in name1 and "_bin3" in name1:
+              generatorSyst.append((("Wjets_4Jhighx_bin3","SR4JhighxBVEM"), WjetsSystematics[key]))
+
+
+           if "SR4JhighxBTEM" in name1 and "_bin1" in name1:
+              generatorSyst.append((("Wjets_4Jhighx_bin1","SR4JhighxBTEM"), WjetsSystematics[key]))
+           if "SR4JhighxBTEM" in name1 and "_bin2" in name1:
+              generatorSyst.append((("Wjets_4Jhighx_bin2","SR4JhighxBTEM"), WjetsSystematics[key]))
+           if "SR4JhighxBTEM" in name1 and "_bin3" in name1:
+              generatorSyst.append((("Wjets_4Jhighx_bin3","SR4JhighxBTEM"), WjetsSystematics[key]))
+
+
+
+           if "VR4JhighxhybridEM" in name1 and "_bin1" in name1:
+              generatorSyst.append((("Wjets_4Jhighx_bin1","VR4JhighxhybridEM"), WjetsSystematics[key]))
+           if  "VR4JhighxhybridEM" in name1 and "_bin2" in name1:
+              generatorSyst.append((("Wjets_4Jhighx_bin2","VR4JhighxhybridEM"), WjetsSystematics[key]))
+           if  "VR4JhighxhybridEM" in name1 and "_bin3" in name1:
+              generatorSyst.append((("Wjets_4Jhighx_bin3","VR4JhighxhybridEM"), WjetsSystematics[key]))
+
+
+           if "VR4JhighxaplEM" in name1 and "_bin1" in name1:
+              generatorSyst.append((("Wjets_4Jhighx_bin1","VR4JhighxaplEM"), WjetsSystematics[key]))
+           if  "VR4JhighxaplEM" in name1 and "_bin2" in name1:
+              generatorSyst.append((("Wjets_4Jhighx_bin2","VR4JhighxaplEM"), WjetsSystematics[key]))
+           if  "VR4JhighxaplEM" in name1 and "_bin3" in name1:
+             generatorSyst.append((("Wjets_4Jhighx_bin3","VR4JhighxaplEM"), WjetsSystematics[key]))
+
+
+
+           if "VR4JhighxmtEM" in name1 and "_bin1" in name1:
+              generatorSyst.append((("Wjets_4Jhighx_bin1","VR4JhighxmtEM"), WjetsSystematics[key]))
+           if  "VR4JhighxmtEM" in name1 and "_bin2" in name1:
+              generatorSyst.append((("Wjets_4Jhighx_bin2","VR4JhighxmtEM"), WjetsSystematics[key]))
+           if  "VR4JhighxmtEM" in name1 and "_bin3" in name1:
+              generatorSyst.append((("Wjets_4Jhighx_bin3","VR4JhighxmtEM"), WjetsSystematics[key]))
+
+
+
+           if "SR6JBVEM" in name1 and "_bin1" in name1:
+              generatorSyst.append((("Wjets_6J_bin1","SR6JBVEM"), WjetsSystematics[key]))
+           if  "SR6JBVEM" in name1 and "_bin2" in name1:
+              generatorSyst.append((("Wjets_6J_bin2","SR6JBVEM"), WjetsSystematics[key]))
+           if  "SR6JBVEM" in name1 and "_bin3" in name1:
+              generatorSyst.append((("Wjets_6J_bin3","SR6JBVEM"), WjetsSystematics[key]))
+           if  "SR6JBVEM" in name1 and "_bin4" in name1:
+              generatorSyst.append((("Wjets_6J_bin4","SR6JBVEM"), WjetsSystematics[key]))
+
+           if "SR6JBTEM" in name1 and "_bin1" in name1:
+              generatorSyst.append((("Wjets_6J_bin1","SR6JBTEM"), WjetsSystematics[key]))
+           if "SR6JBTEM" in name1 and "_bin2" in name1:
+              generatorSyst.append((("Wjets_6J_bin2","SR6JBTEM"), WjetsSystematics[key]))
+           if "SR6JBTEM" in name1 and "_bin3" in name1:
+              generatorSyst.append((("Wjets_6J_bin3","SR6JBTEM"), WjetsSystematics[key]))
+           if "SR6JBTEM" in name1 and "_bin4" in name1:
+              generatorSyst.append((("Wjets_6J_bin4","SR6JBTEM"), WjetsSystematics[key]))
+
+
+           if "VR6JmtEM" in name1 and "_bin1" in name1:
+              generatorSyst.append((("Wjets_6J_bin1","VR6JmtEM"), WjetsSystematics[key]))
+           if  "VR6JmtEM" in name1 and "_bin2" in name1:
+              generatorSyst.append((("Wjets_6J_bin2","VR6JmtEM"), WjetsSystematics[key]))
+           if  "VR6JmtEM" in name1 and "_bin3" in name1:
+              generatorSyst.append((("Wjets_6J_bin3","VR6JmtEM"), WjetsSystematics[key]))
+           if  "VR6JmtEM" in name1 and "_bin4" in name1:
+              generatorSyst.append((("Wjets_6J_bin4","VR6JmtEM"), WjetsSystematics[key]))
+
+           if "VR6JaplEM" in name1 and "_bin1" in name1:
+              generatorSyst.append((("Wjets_6J_bin1","VR6JaplEM"), WjetsSystematics[key]))
+           if  "VR6JaplEM" in name1 and "_bin2" in name1:
+              generatorSyst.append((("Wjets_6J_bin2","VR6JaplEM"), WjetsSystematics[key]))
+           if  "VR6JaplEM" in name1 and "_bin3" in name1:
+             generatorSyst.append((("Wjets_6J_bin3","VR6JaplEM"), WjetsSystematics[key]))
+           if  "VR6JaplEM" in name1 and "_bin4" in name1:
+             generatorSyst.append((("Wjets_6J_bin4","VR6JaplEM"), WjetsSystematics[key]))
+
+return generatorSyst
 '''.format(bkg=background)
 
 content = header + main + footer
 if not os.path.exists("hf_configs/"):
     os.makedirs("hf_configs/")
-with open("hf_configs/"+"theoryUncertainties_1Lbb_"+background+".py", 'w') as f:
+with open("hf_configs/"+"theoryUncertainties_"args.analysis+"_"+background+".py", 'w') as f:
     f.write(content)
