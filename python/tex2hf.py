@@ -12,6 +12,7 @@ import collections
 import mmap
 import pprint
 import math
+from itertools import tee
 
 import logging
 from commonHelpers.logger import logger
@@ -21,13 +22,33 @@ parser = argparse.ArgumentParser(description='Transform tex systematic tables in
 parser.add_argument('files', type=argparse.FileType('r'), nargs='+', help='List of files that you want to convert into HF file')
 parser.add_argument('-b', '--backgrounds', nargs='+', help='List of backgrounds that are used to automatically detect which file is used', default=["ttbar", "wjets", "zjets", "vh", "tth", "diboson", "multiboson", "singletop", "ttv"])
 parser.add_argument('-s', '--systematics', nargs='+', help='List of systematic variation names to be considered', default=["CKKW","QSF","RenormFac","PDF"])
-parser.add_argument('-r', '--regions', nargs='+', help='List of regions of interest', default=['SRLM','SRMM','SRHM','WR','STCR','TRLM','TRMM','TRHM','VRtt1on','VRtt2on','VRtt3on','VRtt1off','VRtt2off','VRtt3off',])
+parser.add_argument('-a', '--analysis', help='What analysis to consider. Currently supported: 1Lbb and strong1L')
+parser.add_argument('-r', '--regions', nargs='+', help='List of regions of interest')
+# parser.add_argument('-r', '--regions', nargs='+', help='List of regions of interest')
 
 args = parser.parse_args()
 
-if len(args.backgrounds) == 0:
-    logger.error('No background processes given! Dropping out.')
+if not (args.analysis or (args.backgrounds and args.regions)):
+    logger.error('No analysis nor processes/regions given! Dropping out.')
     sys.exit()
+elif not args.analysis and (args.backgrounds and args.regions):
+    logger.info('Did not provide analysis, but provided backgrounds and regions, so lets guess.')
+if args.analysis:
+    logger.info('Considering analysis: %s' % args.analysis)
+    if args.analysis == '1Lbb':
+        args.backgrounds = ["ttbar", "wjets", "zjets", "vh", "tth", "diboson", "multiboson", "singletop", "ttv"]
+        args.regions = ['SRLMincl','SRMMincl','SRHMincl','SRLM','SRMM','SRHM','WR','STCR','TRLM','TRMM','TRHM','VRtt1on','VRtt2on','VRtt3on','VRtt1off','VRtt2off','VRtt3off']
+    elif args.analysis == 'strong1L':
+        args.backgrounds = ["ttbar", "wjets", "zjets", "vh", "tth", "diboson", "multiboson", "singletop", "ttv"]
+        args.regions = ['SR2J','SR4Jhighx','SR4Jlowx','SR6J', 'TR2J', 'WR2J', 'TR4Jhighx', 'WR4Jhighx', 'TR4Jlowx', 'WR4Jlowx', 'TR6J', 'WR6J', 'VR2Jmet','VR2Jmt', 'VR4Jhighxapl', 'VR4Jhighxmt','VR4Jlowxhybrid','VR4Jlowxapl','VR6Japl','VR6Jmt']
+        meff_binning = collections.OrderedDict()
+        meff_binning["2J"] = [700.,1150.,1600.,2050.,2500.]
+        meff_binning["4Jlowx"] = [1000.,1600.,2200.,2800.]
+        meff_binning["4Jhighx"] = [1000.,1600.,2200.,2800.]
+        meff_binning["6J"] = [700.,1400,2100,2800,3500.]
+    else:
+        logger.error('Analysis not know. Dropping out.')
+        sys.exit()
 
 #first, get some dictionary ready with the necessary structure
 values = collections.OrderedDict()
@@ -36,9 +57,17 @@ for sys in args.systematics:
     for r in args.regions:
         values[sys][r] = {"up":[], "down":[]}
 
+def pairwise(iterable):
+    "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+    a, b = tee(iterable)
+    next(b, None)
+    return zip(a, b)
+
 def getRegionFromExpression(expr):
     if expr == 'SRLM' or expr == 'SRMM' or expr == 'SRHM':
         return 0
+    if expr == 'SRLMincl' or expr == 'SRMMincl' or expr == 'SRHMincl':
+        return expr
     if 'SRLM' in expr:
         return 'SRLM'
     if 'SRMM' in expr:
@@ -113,7 +142,8 @@ for f in args.files:
             elif copy:
                 lines.append(line.strip())
     else:
-        logger.error('You need to provide keywords. I am too lazy to think about something else. Put "tex2hf" before the first and after the last line.')
+        #otherwise just drop out, I don't want to think about this any further ...
+        logger.error('You need to provide keywords. I am too lazy to think about something else. Put "tex2hf" before the first and after the last line (as a comment of course, you do not want this to show up in the table, do you?).')
         sys.exit()
 
     for line in lines:
@@ -203,52 +233,58 @@ def TheorUnc(generatorSyst):
     for key in {bkg}Systematics:
            name=key.split('_')[-1]
 
-           if "SRLM" in name:
-               generatorSyst.append((("{bkg}","SRLMEM"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","SRLMEl"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","SRLMMu"), {bkg}Systematics[key]))
-           elif "SRMM" in name:
-               generatorSyst.append((("{bkg}","SRMMEM"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","SRMMEl"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","SRMMMu"), {bkg}Systematics[key]))
-           elif "SRHM" in name:
-               generatorSyst.append((("{bkg}","SRHMEM"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","SRHMEl"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","SRHMMu"), {bkg}Systematics[key]))
-           elif "TRLM" in name:
-               generatorSyst.append((("{bkg}","TRLMEM"), {bkg}Systematics[key]))
-           elif "TRMM" in name:
-               generatorSyst.append((("{bkg}","TRMMEM"), {bkg}Systematics[key]))
-           elif "TRHM" in name:
-               generatorSyst.append((("{bkg}","TRHMEM"), {bkg}Systematics[key]))
-           elif "WR" in name:
-               generatorSyst.append((("{bkg}","WREM"), {bkg}Systematics[key]))
-           elif "STCR" in name:
-               generatorSyst.append((("{bkg}","STCREM"), {bkg}Systematics[key]))
-           elif "VRtt1on" in name:
-               generatorSyst.append((("{bkg}","VRtt1onEM"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","VRtt1onEl"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","VRtt1onMu"), {bkg}Systematics[key]))
-           elif "VRtt2on" in name:
-               generatorSyst.append((("{bkg}","VRtt2onEM"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","VRtt2onEl"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","VRtt2onMu"), {bkg}Systematics[key]))
-           elif "VRtt3on" in name:
-               generatorSyst.append((("{bkg}","VRtt3onEM"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","VRtt3onEl"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","VRtt3onMu"), {bkg}Systematics[key]))
-           elif "VRtt1off" in name:
-               generatorSyst.append((("{bkg}","VRtt1offEM"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","VRtt1offEl"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","VRtt1offMu"), {bkg}Systematics[key]))
-           elif "VRtt2off" in name:
-               generatorSyst.append((("{bkg}","VRtt2offEM"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","VRtt2offEl"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","VRtt2offMu"), {bkg}Systematics[key]))
-           elif "VRtt3off" in name:
-               generatorSyst.append((("{bkg}","VRtt3offEM"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","VRtt3offEl"), {bkg}Systematics[key]))
-               generatorSyst.append((("{bkg}","VRtt3offMu"), {bkg}Systematics[key]))
+            if "SRLMincl" in name:
+                generatorSyst.append((("{bkg}","SRLMinclEM"), {bkg}Systematics[key]))
+            elif "SRMMincl" in name:
+                generatorSyst.append((("{bkg}","SRMMinclEM"), {bkg}Systematics[key]))
+            elif "SRHMincl" in name:
+                generatorSyst.append((("{bkg}","SRHMinclEM"), {bkg}Systematics[key]))
+            elif "SRLM" in name:
+                generatorSyst.append((("{bkg}","SRLMEM"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","SRLMEl"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","SRLMMu"), {bkg}Systematics[key]))
+            elif "SRMM" in name:
+                generatorSyst.append((("{bkg}","SRMMEM"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","SRMMEl"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","SRMMMu"), {bkg}Systematics[key]))
+            elif "SRHM" in name:
+                generatorSyst.append((("{bkg}","SRHMEM"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","SRHMEl"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","SRHMMu"), {bkg}Systematics[key]))
+            elif "TRLM" in name:
+                generatorSyst.append((("{bkg}","TRLMEM"), {bkg}Systematics[key]))
+            elif "TRMM" in name:
+                generatorSyst.append((("{bkg}","TRMMEM"), {bkg}Systematics[key]))
+            elif "TRHM" in name:
+                generatorSyst.append((("{bkg}","TRHMEM"), {bkg}Systematics[key]))
+            elif "WR" in name:
+                generatorSyst.append((("{bkg}","WREM"), {bkg}Systematics[key]))
+            elif "STCR" in name:
+                generatorSyst.append((("{bkg}","STCREM"), {bkg}Systematics[key]))
+            elif "VRtt1on" in name:
+                generatorSyst.append((("{bkg}","VRtt1onEM"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","VRtt1onEl"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","VRtt1onMu"), {bkg}Systematics[key]))
+            elif "VRtt2on" in name:
+                generatorSyst.append((("{bkg}","VRtt2onEM"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","VRtt2onEl"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","VRtt2onMu"), {bkg}Systematics[key]))
+            elif "VRtt3on" in name:
+                generatorSyst.append((("{bkg}","VRtt3onEM"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","VRtt3onEl"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","VRtt3onMu"), {bkg}Systematics[key]))
+            elif "VRtt1off" in name:
+                generatorSyst.append((("{bkg}","VRtt1offEM"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","VRtt1offEl"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","VRtt1offMu"), {bkg}Systematics[key]))
+            elif "VRtt2off" in name:
+                generatorSyst.append((("{bkg}","VRtt2offEM"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","VRtt2offEl"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","VRtt2offMu"), {bkg}Systematics[key]))
+            elif "VRtt3off" in name:
+                generatorSyst.append((("{bkg}","VRtt3offEM"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","VRtt3offEl"), {bkg}Systematics[key]))
+                generatorSyst.append((("{bkg}","VRtt3offMu"), {bkg}Systematics[key]))
 
 '''.format(bkg=background)
 
