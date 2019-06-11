@@ -40,14 +40,28 @@ if args.analysis:
         args.regions = ['SRLMincl','SRMMincl','SRHMincl','SRLM','SRMM','SRHM','WR','STCR','TRLM','TRMM','TRHM','VRtt1on','VRtt2on','VRtt3on','VRtt1off','VRtt2off','VRtt3off']
     elif args.analysis == 'strong1L':
         args.backgrounds = ["ttbar", "wjets", "zjets", "vh", "tth", "diboson", "multiboson", "singletop", "ttv"]
-        args.regions = ['SR2J','SR4Jhighx','SR4Jlowx','SR6J', 'TR2J', 'WR2J', 'TR4Jhighx', 'WR4Jhighx', 'TR4Jlowx', 'WR4Jlowx', 'TR6J', 'WR6J', 'VR2Jmet','VR2Jmt', 'VR4Jhighxapl', 'VR4Jhighxmt','VR4Jlowxhybrid','VR4Jlowxapl','VR6Japl','VR6Jmt']
+        regions = ['SR2J','SR4Jhighx','SR4Jlowx','SR6J', 'TR2J', 'WR2J', 'TR4Jhighx', 'WR4Jhighx', 'TR4Jlowx', 'WR4Jlowx', 'TR6J', 'WR6J', 'VR2Jmet','VR2Jmt', 'VR4Jhighxapl', 'VR4Jhighxmt','VR4Jlowxhybrid','VR4Jlowxapl','VR6Japl','VR6Jmt']
         meff_binning = collections.OrderedDict()
         meff_binning["2J"] = [700.,1150.,1600.,2050.,2500.]
         meff_binning["4Jlowx"] = [1000.,1600.,2200.,2800.]
         meff_binning["4Jhighx"] = [1000.,1600.,2200.,2800.]
         meff_binning["6J"] = [700.,1400,2100,2800,3500.]
+
+        for region in regions:
+            for tower,bins in meff_binning.iteritems():
+                if tower in region:
+                    logger.debug('Tower %s in %s' % (tower,region))
+                    if "VR"+tower in region:
+                        #we are in VR, so dont differentiate between BTEM and BVEM
+                        for i,bin in enumerate(bins[:-1]):
+                            args.regions.append(region+btag+"_bin{}".format(i+1))
+                    else:
+                        for btag in ["BVEM", "BTEM"]:
+                            for i,bin in enumerate(bins[:-1]):
+                                args.regions.append(region+btag+"_bin{}".format(i+1))
+
     else:
-        logger.error('Analysis not know. Dropping out.')
+        logger.error('Analysis not known. Dropping out.')
         sys.exit()
 
 #first, get some dictionary ready with the necessary structure
@@ -75,7 +89,7 @@ def getRegionFromExpression(expr):
             return 'SRMM'
         if 'SRHM' in expr:
             return 'SRHM'
-    elif args.analaysis == 'strong1L':
+    elif args.analysis == 'strong1L':
         return expr
     for region in args.regions:
         if expr == region:
@@ -210,35 +224,35 @@ header += r'''
 {}Systematics={{}}
 '''.format(background)
 
-main = r''''''
-
-for sys,d in values.items():
-    main += '''
-'''
-    for region,uncertainties in d.items():
-        up_uncertainties = uncertainties["up"]
-        down_uncertainties = uncertainties["down"]
-        ups = ""
-        for up_unc in up_uncertainties:
-            if up_unc > 0:
-                up_unc = "+{}".format(abs(up_unc))
-            else:
-                up_unc = "-{}".format(abs(up_unc))
-            ups += "(1.{}),".format(up_unc)
-        downs = ""
-        for down_unc in down_uncertainties:
-            if down_unc > 0:
-                down_unc = "+{}".format(abs(down_unc))
-            else:
-                down_unc = "-{}".format(abs(down_unc))
-            downs += "(1.{}),".format(down_unc)
-        ups = ups[:-1]
-        downs = downs[:-1]
-
-        main += '''{bkg}Systematics['{bkg}{syst}_{region}'] = Systematic("{bkg}{syst}", configMgr.weights, [{ups}], [{downs}], "user","userHistoSys")
-'''.format(bkg = background, syst = sys, region = region, ups=ups, downs=downs)
-
 if args.analysis == '1Lbb':
+
+    main = r''''''
+
+    for sys,d in values.items():
+        main += '''
+    '''
+        for region,uncertainties in d.items():
+            up_uncertainties = uncertainties["up"]
+            down_uncertainties = uncertainties["down"]
+            ups = ""
+            for up_unc in up_uncertainties:
+                if up_unc > 0:
+                    up_unc = "+{}".format(abs(up_unc))
+                else:
+                    up_unc = "-{}".format(abs(up_unc))
+                ups += "(1.{}),".format(up_unc)
+            downs = ""
+            for down_unc in down_uncertainties:
+                if down_unc > 0:
+                    down_unc = "+{}".format(abs(down_unc))
+                else:
+                    down_unc = "-{}".format(abs(down_unc))
+                downs += "(1.{}),".format(down_unc)
+            ups = ups[:-1]
+            downs = downs[:-1]
+
+            main += '''{bkg}Systematics['{bkg}{syst}_{region}'] = Systematic("{bkg}{syst}", configMgr.weights, [{ups}], [{downs}], "user","userHistoSys")
+'''.format(bkg = background, syst = sys, region = region, ups=ups, downs=downs)
 
     footer = r'''
 def TheorUnc(generatorSyst):
@@ -302,7 +316,36 @@ def TheorUnc(generatorSyst):
 
 elif args.analysis == 'strong1L':
 
-        footer = r'''
+    main = r''''''
+
+    for sys,d in values.items():
+        main += '''
+    '''
+        for region,uncertainties in d.items():
+            up_uncertainties = uncertainties["up"]
+            down_uncertainties = uncertainties["down"]
+            ups = ""
+            for up_unc in up_uncertainties:
+                if up_unc > 0:
+                    up_unc = "+{}".format(abs(up_unc))
+                else:
+                    up_unc = "-{}".format(abs(up_unc))
+                ups += "(1.{}),".format(up_unc)
+            downs = ""
+            for down_unc in down_uncertainties:
+                if down_unc > 0:
+                    down_unc = "+{}".format(abs(down_unc))
+                else:
+                    down_unc = "-{}".format(abs(down_unc))
+                downs += "(1.{}),".format(down_unc)
+            ups = ups[:-1]
+            downs = downs[:-1]
+
+            main += '''{bkg}Systematics['{bkg}{syst}_{region}'] = Systematic("{bkg}{syst}", configMgr.weights, [{ups}], [{downs}], "user","userHistoSys")
+'''.format(bkg = background, syst = sys, region = region, ups=ups, downs=downs)
+
+
+    footer = r'''
 def TheorUnc(generatorSyst):
     for key in {bkg}Systematics:
            name=key.split('_')
@@ -467,5 +510,5 @@ return generatorSyst
 content = header + main + footer
 if not os.path.exists("hf_configs/"):
     os.makedirs("hf_configs/")
-with open("hf_configs/"+"theoryUncertainties_"args.analysis+"_"+background+".py", 'w') as f:
+with open("hf_configs/"+"theoryUncertainties_"+args.analysis+"_"+background+".py", 'w') as f:
     f.write(content)
