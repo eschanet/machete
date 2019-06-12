@@ -23,7 +23,7 @@ parser.add_argument('files', type=argparse.FileType('r'), nargs='+', help='List 
 parser.add_argument('-b', '--backgrounds', nargs='+', help='List of backgrounds that are used to automatically detect which file is used', default=["ttbar", "wjets", "zjets", "vh", "tth", "diboson", "multiboson", "singletop", "ttv"])
 parser.add_argument('-s', '--systematics', nargs='+', help='List of systematic variation names to be considered', default=["CKKW","QSF","RenormFac","PDF"])
 parser.add_argument('-a', '--analysis', help='What analysis to consider. Currently supported: 1Lbb and strong1L')
-parser.add_argument('-r', '--regions', nargs='+', help='List of regions of interest')
+parser.add_argument('-r', '--regions', nargs='+', help='List of regions of interest', default=[])
 # parser.add_argument('-r', '--regions', nargs='+', help='List of regions of interest')
 
 args = parser.parse_args()
@@ -48,21 +48,23 @@ if args.analysis:
         meff_binning["6J"] = [700.,1400,2100,2800,3500.]
 
         for region in regions:
-            for tower,bins in meff_binning.iteritems():
+            for tower,bins in meff_binning.items():
                 if tower in region:
                     logger.debug('Tower %s in %s' % (tower,region))
                     if "VR"+tower in region:
                         #we are in VR, so dont differentiate between BTEM and BVEM
                         for i,bin in enumerate(bins[:-1]):
-                            args.regions.append(region+btag+"_bin{}".format(i+1))
+                            args.regions.append(region+"EM"+"_bin{}".format(i+1))
                     else:
-                        for btag in ["BVEM", "BTEM"]:
+                        for btag in ["BV", "BT"]:
                             for i,bin in enumerate(bins[:-1]):
-                                args.regions.append(region+btag+"_bin{}".format(i+1))
+                                args.regions.append(region+btag+"EM"+"_bin{}".format(i+1))
 
     else:
         logger.error('Analysis not known. Dropping out.')
         sys.exit()
+
+#pprint.pprint(args.regions)
 
 #first, get some dictionary ready with the necessary structure
 values = collections.OrderedDict()
@@ -214,11 +216,11 @@ from systematic import Systematic
 from configManager import configMgr
 '''
 
-if args.analysis == 'strong1L':
-    header += r'''
-Regions = [ 'BVEM', 'BTEM' ]
-MeffBins = [ '_bin1', '_bin2', '_bin3', '_bin4']
-'''
+#if args.analysis == 'strong1L':
+#    header += r'''
+#Regions = [ 'BVEM', 'BTEM' ]
+#MeffBins = [ '_bin1', '_bin2', '_bin3', '_bin4']
+#'''
 
 header += r'''
 {}Systematics={{}}
@@ -230,7 +232,7 @@ if args.analysis == '1Lbb':
 
     for sys,d in values.items():
         main += '''
-    '''
+'''
         for region,uncertainties in d.items():
             up_uncertainties = uncertainties["up"]
             down_uncertainties = uncertainties["down"]
@@ -320,7 +322,7 @@ elif args.analysis == 'strong1L':
 
     for sys,d in values.items():
         main += '''
-    '''
+'''
         for region,uncertainties in d.items():
             up_uncertainties = uncertainties["up"]
             down_uncertainties = uncertainties["down"]
