@@ -51,8 +51,8 @@ if args.analysis:
             for tower,bins in meff_binning.items():
                 if tower in region:
                     logger.debug('Tower %s in %s' % (tower,region))
-                    if "VR"+tower in region:
-                        #we are in VR, so dont differentiate between BTEM and BVEM
+                    if ("VR"+tower in region) or ("TR"+tower in region) or ("WR"+tower in region):
+                        #dont differentiate between BT and BV
                         for i,bin in enumerate(bins[:-1]):
                             args.regions.append(region+"EM"+"_bin{}".format(i+1))
                     else:
@@ -350,161 +350,210 @@ elif args.analysis == 'strong1L':
     footer = r'''
 def TheorUnc(generatorSyst):
     for key in {bkg}Systematics:
-           name=key.split('_')
-           name1=name[1]+"_"+name[2]
+        name=key.split('_')
+        name1=name[1]+"_"+name[2]
 
-           if "SR2JBVEM" in name1 and "_bin1" in name1:
-              generatorSyst.append((("Wjets_2J_bin1","SR2JBVEM"), WjetsSystematics[key]))
-           if  "SR2JBVEM" in name1 and "_bin2" in name1:
-              generatorSyst.append((("Wjets_2J_bin2","SR2JBVEM"), WjetsSystematics[key]))
-           if  "SR2JBVEM" in name1 and "_bin3" in name1:
-              generatorSyst.append((("Wjets_2J_bin3","SR2JBVEM"), WjetsSystematics[key]))
-           if  "SR2JBVEM" in name1 and "_bin4" in name1:
-              generatorSyst.append((("Wjets_2J_bin4","SR2JBVEM"), WjetsSystematics[key]))
+        if "SR2JBVEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_2J_bin1","SR2JBVEM"), {bkg}Systematics[key]))
+        if  "SR2JBVEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_2J_bin2","SR2JBVEM"), {bkg}Systematics[key]))
+        if  "SR2JBVEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_2J_bin3","SR2JBVEM"), {bkg}Systematics[key]))
+        if  "SR2JBVEM" in name1 and "_bin4" in name1:
+            generatorSyst.append((("{bkg}_2J_bin4","SR2JBVEM"), {bkg}Systematics[key]))
 
-           if "SR2JBTEM" in name1 and "_bin1" in name1:
-              generatorSyst.append((("Wjets_2J_bin1","SR2JBTEM"), WjetsSystematics[key]))
-           if "SR2JBTEM" in name1 and "_bin2" in name1:
-              generatorSyst.append((("Wjets_2J_bin2","SR2JBTEM"), WjetsSystematics[key]))
-           if "SR2JBTEM" in name1 and "_bin3" in name1:
-              generatorSyst.append((("Wjets_2J_bin3","SR2JBTEM"), WjetsSystematics[key]))
-           if "SR2JBTEM" in name1 and "_bin4" in name1:
-              generatorSyst.append((("Wjets_2J_bin4","SR2JBTEM"), WjetsSystematics[key]))
+        if "SR2JBTEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_2J_bin1","SR2JBTEM"), {bkg}Systematics[key]))
+        if "SR2JBTEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_2J_bin2","SR2JBTEM"), {bkg}Systematics[key]))
+        if "SR2JBTEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_2J_bin3","SR2JBTEM"), {bkg}Systematics[key]))
+        if "SR2JBTEM" in name1 and "_bin4" in name1:
+            generatorSyst.append((("{bkg}_2J_bin4","SR2JBTEM"), {bkg}Systematics[key]))
 
+        if "TR2JEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_2J_bin1","TR2JEM"), {bkg}Systematics[key]))
+        if "TR2JEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_2J_bin2","TR2JEM"), {bkg}Systematics[key]))
+        if "TR2JEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_2J_bin3","TR2JEM"), {bkg}Systematics[key]))
+        if "TR2JEM" in name1 and "_bin4" in name1:
+            generatorSyst.append((("{bkg}_2J_bin4","TR2JEM"), {bkg}Systematics[key]))
 
-           if "VR2JmtEM" in name1 and "_bin1" in name1:
-              generatorSyst.append((("Wjets_2J_bin1","VR2JmtEM"), WjetsSystematics[key]))
-           if  "VR2JmtEM" in name1 and "_bin2" in name1:
-              generatorSyst.append((("Wjets_2J_bin2","VR2JmtEM"), WjetsSystematics[key]))
-           if  "VR2JmtEM" in name1 and "_bin3" in name1:
-              generatorSyst.append((("Wjets_2J_bin3","VR2JmtEM"), WjetsSystematics[key]))
-           if  "VR2JmtEM" in name1 and "_bin4" in name1:
-              generatorSyst.append((("Wjets_2J_bin4","VR2JmtEM"), WjetsSystematics[key]))
+        if "WR2JEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_2J_bin1","WR2JEM"), {bkg}Systematics[key]))
+        if "WR2JEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_2J_bin2","WR2JEM"), {bkg}Systematics[key]))
+        if "WR2JEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_2J_bin3","WR2JEM"), {bkg}Systematics[key]))
+        if "WR2JEM" in name1 and "_bin4" in name1:
+            generatorSyst.append((("{bkg}_2J_bin4","WR2JEM"), {bkg}Systematics[key]))
 
-           if "VR2JmetEM" in name1 and "_bin1" in name1:
-              generatorSyst.append((("Wjets_2J_bin1","VR2JmetEM"), WjetsSystematics[key]))
-           if  "VR2JmetEM" in name1 and "_bin2" in name1:
-              generatorSyst.append((("Wjets_2J_bin2","VR2JmetEM"), WjetsSystematics[key]))
-           if  "VR2JmetEM" in name1 and "_bin3" in name1:
-             generatorSyst.append((("Wjets_2J_bin3","VR2JmetEM"), WjetsSystematics[key]))
-           if  "VR2JmetEM" in name1 and "_bin4" in name1:
-             generatorSyst.append((("Wjets_2J_bin4","VR2JmetEM"), WjetsSystematics[key]))
+        if "VR2JmtEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_2J_bin1","VR2JmtEM"), {bkg}Systematics[key]))
+        if  "VR2JmtEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_2J_bin2","VR2JmtEM"), {bkg}Systematics[key]))
+        if  "VR2JmtEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_2J_bin3","VR2JmtEM"), {bkg}Systematics[key]))
+        if  "VR2JmtEM" in name1 and "_bin4" in name1:
+            generatorSyst.append((("{bkg}_2J_bin4","VR2JmtEM"), {bkg}Systematics[key]))
 
-
-           if "SR4JlowxBVEM" in name1 and "_bin1" in name1:
-              generatorSyst.append((("Wjets_4Jlowx_bin1","SR4JlowxBVEM"), WjetsSystematics[key]))
-           if  "SR4JlowxBVEM" in name1 and "_bin2" in name1:
-              generatorSyst.append((("Wjets_4Jlowx_bin2","SR4JlowxBVEM"), WjetsSystematics[key]))
-           if  "SR4JlowxBVEM" in name1 and "_bin3" in name1:
-              generatorSyst.append((("Wjets_4Jlowx_bin3","SR4JlowxBVEM"), WjetsSystematics[key]))
-
-
-           if "SR4JlowxBTEM" in name1 and "_bin1" in name1:
-              generatorSyst.append((("Wjets_4Jlowx_bin1","SR4JlowxBTEM"), WjetsSystematics[key]))
-           if "SR4JlowxBTEM" in name1 and "_bin2" in name1:
-              generatorSyst.append((("Wjets_4Jlowx_bin2","SR4JlowxBTEM"), WjetsSystematics[key]))
-           if "SR4JlowxBTEM" in name1 and "_bin3" in name1:
-              generatorSyst.append((("Wjets_4Jlowx_bin3","SR4JlowxBTEM"), WjetsSystematics[key]))
-
-
-
-           if "VR4JlowxhybridEM" in name1 and "_bin1" in name1:
-              generatorSyst.append((("Wjets_4Jlowx_bin1","VR4JlowxhybridEM"), WjetsSystematics[key]))
-           if  "VR4JlowxhybridEM" in name1 and "_bin2" in name1:
-              generatorSyst.append((("Wjets_4Jlowx_bin2","VR4JlowxhybridEM"), WjetsSystematics[key]))
-           if  "VR4JlowxhybridEM" in name1 and "_bin3" in name1:
-              generatorSyst.append((("Wjets_4Jlowx_bin3","VR4JlowxhybridEM"), WjetsSystematics[key]))
-
-           if "VR4JlowxaplEM" in name1 and "_bin1" in name1:
-              generatorSyst.append((("Wjets_4Jlowx_bin1","VR4JlowxaplEM"), WjetsSystematics[key]))
-           if  "VR4JlowxaplEM" in name1 and "_bin2" in name1:
-              generatorSyst.append((("Wjets_4Jlowx_bin2","VR4JlowxaplEM"), WjetsSystematics[key]))
-           if  "VR4JlowxaplEM" in name1 and "_bin3" in name1:
-             generatorSyst.append((("Wjets_4Jlowx_bin3","VR4JlowxaplEM"), WjetsSystematics[key]))
+        if "VR2JmetEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_2J_bin1","VR2JmetEM"), {bkg}Systematics[key]))
+        if  "VR2JmetEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_2J_bin2","VR2JmetEM"), {bkg}Systematics[key]))
+        if  "VR2JmetEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_2J_bin3","VR2JmetEM"), {bkg}Systematics[key]))
+        if  "VR2JmetEM" in name1 and "_bin4" in name1:
+            generatorSyst.append((("{bkg}_2J_bin4","VR2JmetEM"), {bkg}Systematics[key]))
 
 
+        if "SR4JlowxBVEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin1","SR4JlowxBVEM"), {bkg}Systematics[key]))
+        if  "SR4JlowxBVEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin2","SR4JlowxBVEM"), {bkg}Systematics[key]))
+        if  "SR4JlowxBVEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin3","SR4JlowxBVEM"), {bkg}Systematics[key]))
+
+        if "SR4JlowxBTEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin1","SR4JlowxBTEM"), {bkg}Systematics[key]))
+        if "SR4JlowxBTEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin2","SR4JlowxBTEM"), {bkg}Systematics[key]))
+        if "SR4JlowxBTEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin3","SR4JlowxBTEM"), {bkg}Systematics[key]))
+
+        if "TR4JlowxEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin1","TR4JlowxEM"), {bkg}Systematics[key]))
+        if "TR4JlowxEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin2","TR4JlowxEM"), {bkg}Systematics[key]))
+        if "TR4JlowxEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin3","TR4JlowxEM"), {bkg}Systematics[key]))
+
+        if "WR4JlowxEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin1","WR4JlowxEM"), {bkg}Systematics[key]))
+        if "WR4JlowxEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin2","WR4JlowxEM"), {bkg}Systematics[key]))
+        if "WR4JlowxEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin3","WR4JlowxEM"), {bkg}Systematics[key]))
+
+        if "VR4JlowxhybridEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin1","VR4JlowxhybridEM"), {bkg}Systematics[key]))
+        if  "VR4JlowxhybridEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin2","VR4JlowxhybridEM"), {bkg}Systematics[key]))
+        if  "VR4JlowxhybridEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin3","VR4JlowxhybridEM"), {bkg}Systematics[key]))
+
+        if "VR4JlowxaplEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin1","VR4JlowxaplEM"), {bkg}Systematics[key]))
+        if  "VR4JlowxaplEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin2","VR4JlowxaplEM"), {bkg}Systematics[key]))
+        if  "VR4JlowxaplEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_4Jlowx_bin3","VR4JlowxaplEM"), {bkg}Systematics[key]))
 
 
+        if "SR4JhighxBVEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin1","SR4JhighxBVEM"), {bkg}Systematics[key]))
+        if  "SR4JhighxBVEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin2","SR4JhighxBVEM"), {bkg}Systematics[key]))
+        if  "SR4JhighxBVEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin3","SR4JhighxBVEM"), {bkg}Systematics[key]))
 
-           if "SR4JhighxBVEM" in name1 and "_bin1" in name1:
-              generatorSyst.append((("Wjets_4Jhighx_bin1","SR4JhighxBVEM"), WjetsSystematics[key]))
-           if  "SR4JhighxBVEM" in name1 and "_bin2" in name1:
-              generatorSyst.append((("Wjets_4Jhighx_bin2","SR4JhighxBVEM"), WjetsSystematics[key]))
-           if  "SR4JhighxBVEM" in name1 and "_bin3" in name1:
-              generatorSyst.append((("Wjets_4Jhighx_bin3","SR4JhighxBVEM"), WjetsSystematics[key]))
+        if "SR4JhighxBTEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin1","SR4JhighxBTEM"), {bkg}Systematics[key]))
+        if "SR4JhighxBTEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin2","SR4JhighxBTEM"), {bkg}Systematics[key]))
+        if "SR4JhighxBTEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin3","SR4JhighxBTEM"), {bkg}Systematics[key]))
 
+        if "TR4JhighxEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin1","TR4JhighxEM"), {bkg}Systematics[key]))
+        if "TR4JhighxEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin2","TR4JhighxEM"), {bkg}Systematics[key]))
+        if "TR4JhighxEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin3","TR4JhighxEM"), {bkg}Systematics[key]))
 
-           if "SR4JhighxBTEM" in name1 and "_bin1" in name1:
-              generatorSyst.append((("Wjets_4Jhighx_bin1","SR4JhighxBTEM"), WjetsSystematics[key]))
-           if "SR4JhighxBTEM" in name1 and "_bin2" in name1:
-              generatorSyst.append((("Wjets_4Jhighx_bin2","SR4JhighxBTEM"), WjetsSystematics[key]))
-           if "SR4JhighxBTEM" in name1 and "_bin3" in name1:
-              generatorSyst.append((("Wjets_4Jhighx_bin3","SR4JhighxBTEM"), WjetsSystematics[key]))
+        if "WR4JhighxEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin1","WR4JhighxEM"), {bkg}Systematics[key]))
+        if "WR4JhighxEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin2","WR4JhighxEM"), {bkg}Systematics[key]))
+        if "WR4JhighxEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin3","WR4JhighxEM"), {bkg}Systematics[key]))
 
+        if "VR4JhighxhybridEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin1","VR4JhighxhybridEM"), {bkg}Systematics[key]))
+        if  "VR4JhighxhybridEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin2","VR4JhighxhybridEM"), {bkg}Systematics[key]))
+        if  "VR4JhighxhybridEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin3","VR4JhighxhybridEM"), {bkg}Systematics[key]))
 
+        if "VR4JhighxaplEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin1","VR4JhighxaplEM"), {bkg}Systematics[key]))
+        if  "VR4JhighxaplEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin2","VR4JhighxaplEM"), {bkg}Systematics[key]))
+        if  "VR4JhighxaplEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin3","VR4JhighxaplEM"), {bkg}Systematics[key]))
 
-           if "VR4JhighxhybridEM" in name1 and "_bin1" in name1:
-              generatorSyst.append((("Wjets_4Jhighx_bin1","VR4JhighxhybridEM"), WjetsSystematics[key]))
-           if  "VR4JhighxhybridEM" in name1 and "_bin2" in name1:
-              generatorSyst.append((("Wjets_4Jhighx_bin2","VR4JhighxhybridEM"), WjetsSystematics[key]))
-           if  "VR4JhighxhybridEM" in name1 and "_bin3" in name1:
-              generatorSyst.append((("Wjets_4Jhighx_bin3","VR4JhighxhybridEM"), WjetsSystematics[key]))
-
-
-           if "VR4JhighxaplEM" in name1 and "_bin1" in name1:
-              generatorSyst.append((("Wjets_4Jhighx_bin1","VR4JhighxaplEM"), WjetsSystematics[key]))
-           if  "VR4JhighxaplEM" in name1 and "_bin2" in name1:
-              generatorSyst.append((("Wjets_4Jhighx_bin2","VR4JhighxaplEM"), WjetsSystematics[key]))
-           if  "VR4JhighxaplEM" in name1 and "_bin3" in name1:
-             generatorSyst.append((("Wjets_4Jhighx_bin3","VR4JhighxaplEM"), WjetsSystematics[key]))
-
-
-
-           if "VR4JhighxmtEM" in name1 and "_bin1" in name1:
-              generatorSyst.append((("Wjets_4Jhighx_bin1","VR4JhighxmtEM"), WjetsSystematics[key]))
-           if  "VR4JhighxmtEM" in name1 and "_bin2" in name1:
-              generatorSyst.append((("Wjets_4Jhighx_bin2","VR4JhighxmtEM"), WjetsSystematics[key]))
-           if  "VR4JhighxmtEM" in name1 and "_bin3" in name1:
-              generatorSyst.append((("Wjets_4Jhighx_bin3","VR4JhighxmtEM"), WjetsSystematics[key]))
-
-
-
-           if "SR6JBVEM" in name1 and "_bin1" in name1:
-              generatorSyst.append((("Wjets_6J_bin1","SR6JBVEM"), WjetsSystematics[key]))
-           if  "SR6JBVEM" in name1 and "_bin2" in name1:
-              generatorSyst.append((("Wjets_6J_bin2","SR6JBVEM"), WjetsSystematics[key]))
-           if  "SR6JBVEM" in name1 and "_bin3" in name1:
-              generatorSyst.append((("Wjets_6J_bin3","SR6JBVEM"), WjetsSystematics[key]))
-           if  "SR6JBVEM" in name1 and "_bin4" in name1:
-              generatorSyst.append((("Wjets_6J_bin4","SR6JBVEM"), WjetsSystematics[key]))
-
-           if "SR6JBTEM" in name1 and "_bin1" in name1:
-              generatorSyst.append((("Wjets_6J_bin1","SR6JBTEM"), WjetsSystematics[key]))
-           if "SR6JBTEM" in name1 and "_bin2" in name1:
-              generatorSyst.append((("Wjets_6J_bin2","SR6JBTEM"), WjetsSystematics[key]))
-           if "SR6JBTEM" in name1 and "_bin3" in name1:
-              generatorSyst.append((("Wjets_6J_bin3","SR6JBTEM"), WjetsSystematics[key]))
-           if "SR6JBTEM" in name1 and "_bin4" in name1:
-              generatorSyst.append((("Wjets_6J_bin4","SR6JBTEM"), WjetsSystematics[key]))
+        if "VR4JhighxmtEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin1","VR4JhighxmtEM"), {bkg}Systematics[key]))
+        if  "VR4JhighxmtEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin2","VR4JhighxmtEM"), {bkg}Systematics[key]))
+        if  "VR4JhighxmtEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_4Jhighx_bin3","VR4JhighxmtEM"), {bkg}Systematics[key]))
 
 
-           if "VR6JmtEM" in name1 and "_bin1" in name1:
-              generatorSyst.append((("Wjets_6J_bin1","VR6JmtEM"), WjetsSystematics[key]))
-           if  "VR6JmtEM" in name1 and "_bin2" in name1:
-              generatorSyst.append((("Wjets_6J_bin2","VR6JmtEM"), WjetsSystematics[key]))
-           if  "VR6JmtEM" in name1 and "_bin3" in name1:
-              generatorSyst.append((("Wjets_6J_bin3","VR6JmtEM"), WjetsSystematics[key]))
-           if  "VR6JmtEM" in name1 and "_bin4" in name1:
-              generatorSyst.append((("Wjets_6J_bin4","VR6JmtEM"), WjetsSystematics[key]))
+        if "SR6JBVEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_6J_bin1","SR6JBVEM"), {bkg}Systematics[key]))
+        if  "SR6JBVEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_6J_bin2","SR6JBVEM"), {bkg}Systematics[key]))
+        if  "SR6JBVEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_6J_bin3","SR6JBVEM"), {bkg}Systematics[key]))
+        if  "SR6JBVEM" in name1 and "_bin4" in name1:
+            generatorSyst.append((("{bkg}_6J_bin4","SR6JBVEM"), {bkg}Systematics[key]))
 
-           if "VR6JaplEM" in name1 and "_bin1" in name1:
-              generatorSyst.append((("Wjets_6J_bin1","VR6JaplEM"), WjetsSystematics[key]))
-           if  "VR6JaplEM" in name1 and "_bin2" in name1:
-              generatorSyst.append((("Wjets_6J_bin2","VR6JaplEM"), WjetsSystematics[key]))
-           if  "VR6JaplEM" in name1 and "_bin3" in name1:
-             generatorSyst.append((("Wjets_6J_bin3","VR6JaplEM"), WjetsSystematics[key]))
-           if  "VR6JaplEM" in name1 and "_bin4" in name1:
-             generatorSyst.append((("Wjets_6J_bin4","VR6JaplEM"), WjetsSystematics[key]))
+        if "SR6JBTEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_6J_bin1","SR6JBTEM"), {bkg}Systematics[key]))
+        if "SR6JBTEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_6J_bin2","SR6JBTEM"), {bkg}Systematics[key]))
+        if "SR6JBTEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_6J_bin3","SR6JBTEM"), {bkg}Systematics[key]))
+        if "SR6JBTEM" in name1 and "_bin4" in name1:
+            generatorSyst.append((("{bkg}_6J_bin4","SR6JBTEM"), {bkg}Systematics[key]))
+
+        if "TR6JEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_6J_bin1","TR6JEM"), {bkg}Systematics[key]))
+        if "TR6JEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_6J_bin2","TR6JEM"), {bkg}Systematics[key]))
+        if "TR6JEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_6J_bin3","TR6JEM"), {bkg}Systematics[key]))
+        if "TR6JEM" in name1 and "_bin4" in name1:
+            generatorSyst.append((("{bkg}_6J_bin4","TR6JEM"), {bkg}Systematics[key]))
+
+        if "WR6JEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_6J_bin1","WR6JEM"), {bkg}Systematics[key]))
+        if "WR6JEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_6J_bin2","WR6JEM"), {bkg}Systematics[key]))
+        if "WR6JEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_6J_bin3","WR6JEM"), {bkg}Systematics[key]))
+        if "WR6JEM" in name1 and "_bin4" in name1:
+            generatorSyst.append((("{bkg}_6J_bin4","WR6JEM"), {bkg}Systematics[key]))
+
+        if "VR6JmtEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_6J_bin1","VR6JmtEM"), {bkg}Systematics[key]))
+        if  "VR6JmtEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_6J_bin2","VR6JmtEM"), {bkg}Systematics[key]))
+        if  "VR6JmtEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_6J_bin3","VR6JmtEM"), {bkg}Systematics[key]))
+        if  "VR6JmtEM" in name1 and "_bin4" in name1:
+            generatorSyst.append((("{bkg}_6J_bin4","VR6JmtEM"), {bkg}Systematics[key]))
+
+        if "VR6JaplEM" in name1 and "_bin1" in name1:
+            generatorSyst.append((("{bkg}_6J_bin1","VR6JaplEM"), {bkg}Systematics[key]))
+        if  "VR6JaplEM" in name1 and "_bin2" in name1:
+            generatorSyst.append((("{bkg}_6J_bin2","VR6JaplEM"), {bkg}Systematics[key]))
+        if  "VR6JaplEM" in name1 and "_bin3" in name1:
+            generatorSyst.append((("{bkg}_6J_bin3","VR6JaplEM"), {bkg}Systematics[key]))
+        if  "VR6JaplEM" in name1 and "_bin4" in name1:
+            generatorSyst.append((("{bkg}_6J_bin4","VR6JaplEM"), {bkg}Systematics[key]))
 
 return generatorSyst
 '''.format(bkg=background)
