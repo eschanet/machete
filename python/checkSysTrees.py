@@ -8,7 +8,7 @@ from __future__ import print_function
 import ROOT
 
 import os, subprocess
-import sys
+import sys, re
 import argparse
 
 import logging
@@ -26,7 +26,13 @@ process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
 output, error = process.communicate()
 
 trees = output.split()
-split_trees = [[t for t in trees if b in t] for b in args.processes]
 
-for (l,bkg) in zip(split_trees,args.processes):
+
+raw_names = ["_".join(fullname.split("_")[:5]) for fullname in trees]
+
+unique_names = list(set(raw_names))
+
+split_trees = [[t for t in trees if b in t] for b in unique_names]
+
+for (l,bkg) in zip(split_trees,unique_names):
     logger.info("For process {}: {} trees".format(bkg, len(l)))
