@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-
+import ROOT
+import os
 
 def is_comment(s):
     """ function to check if a line
@@ -9,7 +10,13 @@ def is_comment(s):
     # return true if a line starts with #
     return s.startswith('#')
 
-import os
+def list_treenames(file):
+    tf = ROOT.TFile.Open(file)
+    trees_list = []
+    for key in tf.GetListOfKeys():
+        trees_list.append(key.GetName())
+    tf.Close()
+    return trees_list
 
 class cd:
     """Context manager for changing the current working directory"""
