@@ -111,24 +111,29 @@ preselectionsDict['1Lbb_presel_electron'] = preselectionsDict['1Lbb_presel'] + O
 preselectionsDict['1Lbb_presel_muon'] = preselectionsDict['1Lbb_presel'] + OneMuoSelection
 
 SRSelection        = "met>240. && nJet30>=2 && nJet30<=3 && nBJet30_MV2c10==2 && mbb>100. && mbb<140."
-signalregionsDict["1Lbb_SRLMincl"]=  SRSelection + "&& mt>=100. && mct2>180." + CommonSelection
-signalregionsDict["1Lbb_SRLM1"]=  SRSelection + "&& mt>=100. && mt<160. && mct2>180. && mct2<=230." + CommonSelection
-signalregionsDict["1Lbb_SRLM2"]=  SRSelection + "&& mt>=100. && mt<160. && mct2>230. && mct2<=280." + CommonSelection
-signalregionsDict["1Lbb_SRLM3"]=  SRSelection + "&& mt>=100. && mt<160. && mct2>280." + CommonSelection
-signalregionsDict["1Lbb_SRMMincl"]=  SRSelection + "&& mt>=160. && mct2>180." + CommonSelection
-signalregionsDict["1Lbb_SRMM1"]=  SRSelection + "&& mt>=160. && mt<240. && mct2>180. && mct2<=230." + CommonSelection
-signalregionsDict["1Lbb_SRMM2"]=  SRSelection + "&& mt>=160. && mt<240. && mct2>230. && mct2<=280." + CommonSelection
-signalregionsDict["1Lbb_SRMM3"]=  SRSelection + "&& mt>=160. && mt<240. && mct2>280." + CommonSelection
-signalregionsDict["1Lbb_SRHMincl"]=  SRSelection + "&& mt>=240. && mct2>180. && mlb1>120." + CommonSelection
-signalregionsDict["1Lbb_SRHM1"]=  SRSelection + "&& mt>=240. && mct2>180. && mct2<=230. && mlb1>120." + CommonSelection
-signalregionsDict["1Lbb_SRHM2"]=  SRSelection + "&& mt>=240. && mct2>230. && mct2<=280. && mlb1>120." + CommonSelection
-signalregionsDict["1Lbb_SRHM3"]=  SRSelection + "&& mt>=240. && mct2>280. && mlb1>120." + CommonSelection
+# signalregionsDict["1Lbb_SRLMincl"]=  SRSelection + "&& mt>=100. && mct2>180." + CommonSelection
+signalregionsDict["1Lbb_SRLM_low_mct"]=  SRSelection + "&& mt>=100. && mt<160. && mct2>180. && mct2<=230." + CommonSelection
+signalregionsDict["1Lbb_SRLM_high_mct"]=  SRSelection + "&& mt>=100. && mt<160. && mct2>230. && mct2<=280." + CommonSelection
+signalregionsDict["1Lbb_SRLM_med_mct"]=  SRSelection + "&& mt>=100. && mt<160. && mct2>280." + CommonSelection
+# signalregionsDict["1Lbb_SRMMincl"]=  SRSelection + "&& mt>=160. && mct2>180." + CommonSelection
+signalregionsDict["1Lbb_SRMM_low_mct"]=  SRSelection + "&& mt>=160. && mt<240. && mct2>180. && mct2<=230." + CommonSelection
+signalregionsDict["1Lbb_SRMM_med_mct"]=  SRSelection + "&& mt>=160. && mt<240. && mct2>230. && mct2<=280." + CommonSelection
+signalregionsDict["1Lbb_SRMM_high_mct"]=  SRSelection + "&& mt>=160. && mt<240. && mct2>280." + CommonSelection
+# signalregionsDict["1Lbb_SRHMincl"]=  SRSelection + "&& mt>=240. && mct2>180. && mlb1>120." + CommonSelection
+signalregionsDict["1Lbb_SRHM_low_mct"]=  SRSelection + "&& mt>=240. && mct2>180. && mct2<=230. && mlb1>120." + CommonSelection
+signalregionsDict["1Lbb_SRHM_med_mct"]=  SRSelection + "&& mt>=240. && mct2>230. && mct2<=280. && mlb1>120." + CommonSelection
+signalregionsDict["1Lbb_SRHM_high_mct"]=  SRSelection + "&& mt>=240. && mct2>280. && mlb1>120." + CommonSelection
+
+signalregionsDict["1Lbb_SRLM_disc"]=  SRSelection + "&& mt>=100. && mct2>180." + CommonSelection
+signalregionsDict["1Lbb_SRMM_disc"]=  SRSelection + "&& mt>=160. && mct2>180." + CommonSelection
+signalregionsDict["1Lbb_SRHM_disc"]=  SRSelection + "&& mt>=240. && mct2>180. && mlb1>120." + CommonSelection
+
 
 TRSelection        = "nJet30>=2 && nJet30<=3 && nBJet30_MV2c10==2 && ((mbb>=50 && mbb<=100.) || mbb>=140.) && mct2<=180."
 controlregionsDict["1Lbb_TRLM"]=  TRSelection + "&& mt>=100 && mt<160 && met>240" + CommonSelection
 controlregionsDict["1Lbb_TRMM"]=  TRSelection + "&& mt>=160 && mt<240 && met>240" + CommonSelection
 controlregionsDict["1Lbb_TRHM"]=  TRSelection + "&& mt>=240 && met>240 && mlb1>120." + CommonSelection
-controlregionsDict["1Lbb_TRincl"]=  TRSelection + "&& mt>=100. && met>240." + CommonSelection
+# controlregionsDict["1Lbb_TRincl"]=  TRSelection + "&& mt>=100. && met>240." + CommonSelection
 controlregionsDict["1Lbb_WR"] = "nJet30>=2 && nJet30<=3 && nBJet30_MV2c10==2 && mbb>=50. && mbb<=80. && mct2>180. && mt>50. && mt<100. && met>240." + CommonSelection
 controlregionsDict["1Lbb_STCR"] = "nJet30>=2 && nJet30<=3 && nBJet30_MV2c10==2 && mbb>195. && mct2>180. && mt>=100. && met>240." + CommonSelection
 
