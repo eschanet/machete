@@ -1,12 +1,14 @@
 import collections
 
 
-CommonSelection = "&&  nLep_base==1&&nLep_signal==1 && trigMatch_metTrig"
 OneEleSelection = "&& (AnalysisType==1 && lep1Pt>7.) "
 OneMuoSelection = "&& (AnalysisType==2 && lep1Pt>6.)"
 OneLepSelection = "&& ( (AnalysisType==1 && lep1Pt>7.) || (AnalysisType==2 && lep1Pt>6.))"
 presel_hard = "nJet30>=4&&lep1Pt>=35&&met>250&&trigMatch_metTrig&&nLep_base==1&&nLep_signal==1"
 presel_soft = "nJet30>=2&&lep1Pt<35&&met>250&&trigMatch_metTrig&&nLep_base==1&&nLep_signal==1"
+
+CommonSelection = "&&  nLep_base==1&&nLep_signal==1 && trigMatch_metTrig" + OneLepSelection
+
 btag = "&&nBJet30_MV2c10>0"
 bveto = "&&nBJet30_MV2c10==0"
 
