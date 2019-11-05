@@ -64,8 +64,10 @@ controlregionsDict["strong1L_WR4Jhighx"]=CR4JhighxSelection +" && nBJet30_MV2c10
 #VR proposal preliminary
 VR4JhighxaplSelection ="lep1Pt>35 && nJet30>=4 && nJet30<6 && met>300 && mt>50  && mt<150 && LepAplanarity>0.03 && met/meffInc30>0.2"
 VR4JhighxmtSelection = "lep1Pt>35 && nJet30>=4 && nJet30<6 && met>250 &&met<500 && mt>520 && LepAplanarity<0.01 && met/meffInc30>0.1"
+VR4JhighxhybridSelection  = "lep1Pt>35 && nJet30>=4 && nJet30<6 && met>250 && mt>150 && mt<520 && LepAplanarity>0.01 && LepAplanarity<0.03" ## VR4Jhybrid
 validationregionsDict["strong1L_VR4Jhighxapl"]=VR4JhighxaplSelection + CommonSelection
 validationregionsDict["strong1L_VR4Jhighxmt"]=VR4JhighxmtSelection + CommonSelection
+validationregionsDict["strong1L_VR4Jhighxhybrid"]=VR4JhighxhybridSelection+ CommonSelection  ## VR4Jhybrid
 
 
 # ------- 4J regions for gluino gridx low x--------------------------------------------------------------------------- #
