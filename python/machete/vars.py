@@ -303,3 +303,12 @@ metsig = {
     "xTitle" : "E_{T}^{miss} significance",
     "unit" : "GeV",
 }
+
+metsig = {
+    "varexp" : "met_Phi",
+    "xmin" : -3.15,
+    "xmax" : 3.15,
+    "nbins" : 20,
+    "xTitle" : "#phi(E_{T}^{miss})",
+    "unit" : None,
+}
