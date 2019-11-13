@@ -11,7 +11,7 @@ def is_comment(s):
     return s.startswith('#')
 
 def list_treenames(file):
-    tf = ROOT.TFile.Open(file)
+    tf = ROOT.TFile.Open(file,"READ") if isinstance(file,basestring) else file
     trees_list = []
     for key in tf.GetListOfKeys():
         trees_list.append(key.GetName())
