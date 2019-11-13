@@ -38,8 +38,14 @@ preselectionsDict['strong1L_presel_muon'] = preselectionsDict['strong1L_presel']
 # ------- 2J region --------------------------------------------------------------------------- #
 SR2JSelection        = "lep1Pt<35 && nJet30>=2 && met>400. && mt>100. && (met/meffInc30) > 0.35 && (nJet30/lep1Pt)>0.1"
 signalregionsDict["strong1L_SR2J"]=  SR2JSelection + CommonSelection
-# signalregionsDict["strong1L_SR2JBV"]=SR2JSelection +"&& nBJet30_MV2c10==0" + CommonSelection
-# signalregionsDict["strong1L_SR2JBT"]=SR2JSelection +"&& nBJet30_MV2c10>0" + CommonSelection
+signalregionsDict["strong1L_SR2JBV"]=SR2JSelection +"&& nBJet30_MV2c10==0" + CommonSelection
+signalregionsDict["strong1L_SR2JBT"]=SR2JSelection +"&& nBJet30_MV2c10>0" + CommonSelection
+
+signalregionsDict["strong1L_SR2JBTnomet"]="meffInc30>700. && lep1Pt<35 && nJet30>=2 && mt>100. && (met/meffInc30) > 0.35 && (nJet30/lep1Pt)>0.1 && nBJet30_MV2c10>0" + CommonSelection
+signalregionsDict["strong1L_SR2JBTnomt"]="meffInc30>700. && lep1Pt<35 && nJet30>=2 && met>400. && (met/meffInc30) > 0.35 && (nJet30/lep1Pt)>0.1 && nBJet30_MV2c10>0" + CommonSelection
+signalregionsDict["strong1L_SR2JBVnomet"]="meffInc30>700. && lep1Pt<35 && nJet30>=2 && mt>100. && (met/meffInc30) > 0.35 && (nJet30/lep1Pt)>0.1 && nBJet30_MV2c10==0" + CommonSelection
+signalregionsDict["strong1L_SR2JBVnomt"]="meffInc30>700. && lep1Pt<35 && nJet30>=2 && met>400. && (met/meffInc30) > 0.35 && (nJet30/lep1Pt)>0.1 && nBJet30_MV2c10==0" + CommonSelection
+
 
 CR2JSelection        = "lep1Pt<35 && nJet30>=2 && met>300 &&met<400 && mt>50 &&mt<100 && (met/meffInc30)>0.15 && (nJet30/lep1Pt)>0.1"
 controlregionsDict["strong1L_TR2J"]=CR2JSelection +" && nBJet30_MV2c10>0" + CommonSelection
@@ -47,15 +53,29 @@ controlregionsDict["strong1L_WR2J"]=CR2JSelection +" && nBJet30_MV2c10==0" + Com
 
 VR2JmtSelection      = "lep1Pt<35 && nJet30>=2 && met>300 && met<400  && mt>100 && (met/meffInc30)>0.10 && (nJet30/lep1Pt)>0.1"
 VR2JmetSelection      = "lep1Pt<35 && nJet30>=2 && met>400  && mt>50 &&mt<100 && (met/meffInc30)>0.35 && (nJet30/lep1Pt)>0.1"
+VR2JnometSelection="lep1Pt<35 && nJet30>=2 && mt>50 &&mt<100 && (met/meffInc30)>0.35 && (nJet30/lep1Pt)>0.1"
+VR2JnomtSelection= "lep1Pt<35 && nJet30>=2 && met>300 && met<400 && (met/meffInc30)>0.10 && (nJet30/lep1Pt)>0.1"
 validationregionsDict["strong1L_VR2Jmet"]=VR2JmetSelection + CommonSelection
 validationregionsDict["strong1L_VR2Jmt"]=VR2JmtSelection + CommonSelection
-
+validationregionsDict["strong1L_VR2JmetBT"]=VR2JmetSelection + "&& nBJet30_MV2c10>0" + CommonSelection
+validationregionsDict["strong1L_VR2JmetBV"]=VR2JmetSelection + "&& nBJet30_MV2c10==0" + CommonSelection
+validationregionsDict["strong1L_VR2JmtBT"]=VR2JmtSelection + "&& nBJet30_MV2c10>0" + CommonSelection
+validationregionsDict["strong1L_VR2JmtBV"]=VR2JmtSelection + "&& nBJet30_MV2c10==0" + CommonSelection
+validationregionsDict["strong1L_VR2Jnomet"]=VR2JnometSelection+ CommonSelection
+validationregionsDict["strong1L_VR2Jnomt"]=VR2JnomtSelection + CommonSelection
+validationregionsDict["strong1L_VR2JmtBVthirdbin"]=VR2JmtSelection + "&& nBJet30_MV2c10==0 && meffInc30 > 1600. && meffInc30 < 2050." + CommonSelection
 
 # ------- 4J regions for gluino gridx high x--------------------------------------------------------------------------- #
 SR4JhighxSelection   = "lep1Pt>35 && nJet30>=4 && nJet30<6 && met>300 && mt>520 && LepAplanarity>0.01 && met/meffInc30>0.20"
 signalregionsDict["strong1L_SR4Jhighx"]=  SR4JhighxSelection + CommonSelection
-# signalregionsDict["strong1L_SR4JhighxBV"]=SR4JhighxSelection +"&& nBJet30_MV2c10==0" + CommonSelection
-# signalregionsDict["strong1L_SR4JhighxBT"]=SR4JhighxSelection +"&& nBJet30_MV2c10>0" + CommonSelection
+signalregionsDict["strong1L_SR4JhighxBV"]=SR4JhighxSelection +"&& nBJet30_MV2c10==0" + CommonSelection
+signalregionsDict["strong1L_SR4JhighxBT"]=SR4JhighxSelection +"&& nBJet30_MV2c10>0" + CommonSelection
+
+signalregionsDict["strong1L_SR4JhighxBTnomet"]="meffInc30>1000. && lep1Pt>35 && nJet30>=4 && nJet30<6 && mt>520 && LepAplanarity>0.03 && met/meffInc30>0.2 && nBJet30_MV2c10>0" + CommonSelection
+signalregionsDict["strong1L_SR4JhighxBTnomt"]="meffInc30>1000. && lep1Pt>35 && nJet30>=4 && nJet30<6 && met>300 && LepAplanarity>0.03 && met/meffInc30>0.2 && nBJet30_MV2c10>0" + CommonSelection
+signalregionsDict["strong1L_SR4JhighxBVnomet"]="meffInc30>1000. && lep1Pt>35 && nJet30>=4 && nJet30<6 && mt>520 && LepAplanarity>0.03 && met/meffInc30>0.2 && nBJet30_MV2c10==0" + CommonSelection
+signalregionsDict["strong1L_SR4JhighxBVnomt"]="meffInc30>1000. && lep1Pt>35 && nJet30>=4 && nJet30<6 && met>300 && LepAplanarity>0.03 && met/meffInc30>0.2 && nBJet30_MV2c10==0" + CommonSelection
+
 
 CR4JhighxSelection   = "lep1Pt>35 && nJet30>=4 && nJet30<6 && met>300 && mt>50 && mt<520 && LepAplanarity<0.01 && met/meffInc30>0.2"
 controlregionsDict["strong1L_TR4Jhighx"]=CR4JhighxSelection +" && nBJet30_MV2c10>0" + CommonSelection
@@ -65,16 +85,32 @@ controlregionsDict["strong1L_WR4Jhighx"]=CR4JhighxSelection +" && nBJet30_MV2c10
 VR4JhighxaplSelection ="lep1Pt>35 && nJet30>=4 && nJet30<6 && met>300 && mt>50  && mt<150 && LepAplanarity>0.03 && met/meffInc30>0.2"
 VR4JhighxmtSelection = "lep1Pt>35 && nJet30>=4 && nJet30<6 && met>250 &&met<500 && mt>520 && LepAplanarity<0.01 && met/meffInc30>0.1"
 VR4JhighxhybridSelection  = "lep1Pt>35 && nJet30>=4 && nJet30<6 && met>250 && mt>150 && mt<520 && LepAplanarity>0.01 && LepAplanarity<0.03" ## VR4Jhybrid
+VR4JhighxnoaplSelection ="lep1Pt>35 && nJet30>=4 && nJet30<6 && met>300 && mt>50  && mt<150 && met/meffInc30>0.2"
+VR4JhighxnomtSelection = "lep1Pt>35 && nJet30>=4 && nJet30<6 && met>250 && met<500 && LepAplanarity<0.01 && met/meffInc30>0.1"
 validationregionsDict["strong1L_VR4Jhighxapl"]=VR4JhighxaplSelection + CommonSelection
 validationregionsDict["strong1L_VR4Jhighxmt"]=VR4JhighxmtSelection + CommonSelection
-validationregionsDict["strong1L_VR4Jhighxhybrid"]=VR4JhighxhybridSelection+ CommonSelection  ## VR4Jhybrid
+validationregionsDict["strong1L_VR4Jhighxhybrid"]=VR4JhighxhybridSelection + CommonSelection ## VR4Jhybrid
+validationregionsDict["strong1L_VR4JhighxaplBT"]=VR4JhighxaplSelection + "&& nBJet30_MV2c10>0" + CommonSelection
+validationregionsDict["strong1L_VR4JhighxaplBV"]=VR4JhighxaplSelection + "&& nBJet30_MV2c10==0" + CommonSelection
+validationregionsDict["strong1L_VR4JhighxmtBT"]=VR4JhighxmtSelection + "&& nBJet30_MV2c10>0" + CommonSelection
+validationregionsDict["strong1L_VR4JhighxmtBV"]=VR4JhighxmtSelection + "&& nBJet30_MV2c10==0" + CommonSelection
+validationregionsDict["strong1L_VR4JhighxhybridBT"]=VR4JhighxhybridSelection + "&& nBJet30_MV2c10>0" + CommonSelection
+validationregionsDict["strong1L_VR4JhighxhybridBV"]=VR4JhighxhybridSelection + "&& nBJet30_MV2c10==0" + CommonSelection
+validationregionsDict["strong1L_VR4Jhighxnoapl"]=VR4JhighxnoaplSelection+ CommonSelection
+validationregionsDict["strong1L_VR4Jhighxnomt"]=VR4JhighxnomtSelection+ CommonSelection
 
 
 # ------- 4J regions for gluino gridx low x--------------------------------------------------------------------------- #
 SR4JlowxSelection    = "lep1Pt>35 && nJet30>=4 && nJet30<6 && met>400 && mt>150 && mt<520 && LepAplanarity>0.03"
 signalregionsDict["strong1L_SR4Jlowx"]=  SR4JlowxSelection + CommonSelection
-# signalregionsDict["strong1L_SR4JlowxBV"]=SR4JlowxSelection +"&& nBJet30_MV2c10==0" + CommonSelection
-# signalregionsDict["strong1L_SR4JlowxBT"]=SR4JlowxSelection +"&& nBJet30_MV2c10>0" + CommonSelection
+signalregionsDict["strong1L_SR4JlowxBV"]=SR4JlowxSelection +"&& nBJet30_MV2c10==0" + CommonSelection
+signalregionsDict["strong1L_SR4JlowxBT"]=SR4JlowxSelection +"&& nBJet30_MV2c10>0" + CommonSelection
+
+signalregionsDict["strong1L_SR4JlowxBVnomet"]="meffInc30>1000. && lep1Pt>35 && nJet30>=4 && nJet30<6 && mt>150 && mt<520 && LepAplanarity>0.03 && nBJet30_MV2c10==0" + CommonSelection
+signalregionsDict["strong1L_SR4JlowxBVnomt"]="meffInc30>1000. && lep1Pt>35 && nJet30>=4 && nJet30<6 && met>400 && LepAplanarity>0.03 && nBJet30_MV2c10==0" + CommonSelection
+signalregionsDict["strong1L_SR4JlowxBTnomet"]="meffInc30>1000. && lep1Pt>35 && nJet30>=4 && nJet30<6 && mt>150 && mt<520 && LepAplanarity>0.03 && nBJet30_MV2c10>0" + CommonSelection
+signalregionsDict["strong1L_SR4JlowxBTnomt"]="meffInc30>1000. && lep1Pt>35 && nJet30>=4 && nJet30<6 && met>400 && LepAplanarity>0.03 && nBJet30_MV2c10>0" + CommonSelection
+
 
 CR4JlowxSelection    = "lep1Pt>35 && nJet30>=4 && nJet30<6 && met>400 && mt>50  && mt<150 && LepAplanarity>0.01 && LepAplanarity<0.03"
 controlregionsDict["strong1L_TR4Jlowx"]=CR4JlowxSelection +" && nBJet30_MV2c10>0" + CommonSelection
@@ -83,15 +119,28 @@ controlregionsDict["strong1L_WR4Jlowx"]=CR4JlowxSelection +" && nBJet30_MV2c10==
 #VR proposal preliminary
 VR4JlowxaplSelection = "lep1Pt>35 && nJet30>=4 && nJet30<6 && met>300 && mt>50  && mt<150 && LepAplanarity>0.03"
 VR4JlowxhybridSelection  = "lep1Pt>35 && nJet30>=4 && nJet30<6 && met>250 && mt>150 && mt<520 && LepAplanarity>0.01 && LepAplanarity<0.03" ## VR4Jhybrid
+VR4JlowxnoaplSelection = "lep1Pt>35 && nJet30>=4 && nJet30<6 && met>300 && mt>50  && mt<520"
+VR4JlowxnomtSelection  = "lep1Pt>35 && nJet30>=4 && nJet30<6 && met>250 && LepAplanarity>0.01 && LepAplanarity<0.03"
 validationregionsDict["strong1L_VR4Jlowxapl"]=VR4JlowxaplSelection+ CommonSelection
 validationregionsDict["strong1L_VR4Jlowxhybrid"]=VR4JlowxhybridSelection+ CommonSelection  ## VR4Jhybrid
+validationregionsDict["strong1L_VR4JlowxaplBT"]=VR4JlowxaplSelection + "&& nBJet30_MV2c10>0" + CommonSelection
+validationregionsDict["strong1L_VR4JlowxaplBV"]=VR4JlowxaplSelection + "&& nBJet30_MV2c10==0" + CommonSelection
+validationregionsDict["strong1L_VR4JlowxhybridBT"]=VR4JlowxhybridSelection + "&& nBJet30_MV2c10>0" + CommonSelection
+validationregionsDict["strong1L_VR4JlowxhybridBV"]=VR4JlowxhybridSelection + "&& nBJet30_MV2c10==0" + CommonSelection
+validationregionsDict["strong1L_VR4Jlowxnoapl"]=VR4JlowxnoaplSelection+ CommonSelection
+validationregionsDict["strong1L_VR4Jlowxnomt"]=VR4JlowxnomtSelection+ CommonSelection
 
 
 # ------- 6J regions --------------------------------------------------------------------------- #
 SR6JSelection        = "lep1Pt>35 && nJet30>=6 && met>300. && mt>225.&& LepAplanarity>0.05"
 signalregionsDict["strong1L_SR6J"]= SR6JSelection + CommonSelection
-# signalregionsDict["strong1L_SR6JBV"]=SR6JSelection +"&& nBJet30_MV2c10==0" + CommonSelection
-# signalregionsDict["strong1L_SR6JBT"]=SR6JSelection +"&& nBJet30_MV2c10>0" + CommonSelection
+signalregionsDict["strong1L_SR6JBV"]=SR6JSelection +"&& nBJet30_MV2c10==0" + CommonSelection
+signalregionsDict["strong1L_SR6JBT"]=SR6JSelection +"&& nBJet30_MV2c10>0" + CommonSelection
+
+signalregionsDict["strong1L_SR6JBTnomet"]="meffInc30>700. && lep1Pt>35 && nJet30>=6 && mt>225.&& LepAplanarity>0.05 && nBJet30_MV2c10>0" + CommonSelection
+signalregionsDict["strong1L_SR6JBTnomt"]="meffInc30>700. && lep1Pt>35 && nJet30>=6 && met>300. && LepAplanarity>0.05 && nBJet30_MV2c10>0" + CommonSelection
+signalregionsDict["strong1L_SR6JBVnomet"]="meffInc30>700. && lep1Pt>35 && nJet30>=6 && mt>225.&& LepAplanarity>0.05 && nBJet30_MV2c10==0" + CommonSelection
+signalregionsDict["strong1L_SR6JBVnomt"]="meffInc30>700. && lep1Pt>35 && nJet30>=6 && met>300. && LepAplanarity>0.05 && nBJet30_MV2c10==0" + CommonSelection
 
 CR6JSelection        = "lep1Pt>35 && nJet30>=6 && met>300. && mt>50. && mt<225. && LepAplanarity<0.05"
 controlregionsDict["strong1L_TR6J"]=CR6JSelection +" && nBJet30_MV2c10>0" + CommonSelection
@@ -99,8 +148,16 @@ controlregionsDict["strong1L_WR6J"]=CR6JSelection +" && nBJet30_MV2c10==0" + Com
 
 VR6JaplSelection     = "lep1Pt>35 && nJet30>=6 && met>300. && mt>50. && mt<225 && LepAplanarity>0.05"
 VR6JmtSelection      = "lep1Pt>35 && nJet30>=6 && met>250. && mt>225. && mt<400 && LepAplanarity<0.05"
+VR6JnoaplSelection     = "lep1Pt>35 && nJet30>=6 && met>300. && mt>50. && mt<225"
+VR6JnomtSelection      = "lep1Pt>35 && nJet30>=6 && met>250. && LepAplanarity<0.05"
 validationregionsDict["strong1L_VR6Japl"]=VR6JaplSelection+ CommonSelection
 validationregionsDict["strong1L_VR6Jmt"]=VR6JmtSelection+ CommonSelection
+validationregionsDict["strong1L_VR6JaplBT"]=VR6JaplSelection + "&& nBJet30_MV2c10>0" + CommonSelection
+validationregionsDict["strong1L_VR6JaplBV"]=VR6JaplSelection + "&& nBJet30_MV2c10==0" + CommonSelection
+validationregionsDict["strong1L_VR6JmtBT"]=VR6JmtSelection + "&& nBJet30_MV2c10>0" + CommonSelection
+validationregionsDict["strong1L_VR6JmtBV"]=VR6JmtSelection + "&& nBJet30_MV2c10==0" + CommonSelection
+validationregionsDict["strong1L_VR6Jnoapl"]=VR6JnoaplSelection+CommonSelection
+validationregionsDict["strong1L_VR6Jnomt"]=VR6JnomtSelection+ CommonSelection
 
 
 ################################################################################################
@@ -115,15 +172,15 @@ preselectionsDict['1Lbb_presel_electron'] = preselectionsDict['1Lbb_presel'] + O
 preselectionsDict['1Lbb_presel_muon'] = preselectionsDict['1Lbb_presel'] + OneMuoSelection
 
 SRSelection        = "met>240. && nJet30>=2 && nJet30<=3 && nBJet30_MV2c10==2 && mbb>100. && mbb<140."
-# signalregionsDict["1Lbb_SRLMincl"]=  SRSelection + "&& mt>=100. && mct2>180." + CommonSelection
+signalregionsDict["1Lbb_SRLMincl"]=  SRSelection + "&& mt>=100. && mct2>180." + CommonSelection
 signalregionsDict["1Lbb_SRLM_low_mct"]=  SRSelection + "&& mt>=100. && mt<160. && mct2>180. && mct2<=230." + CommonSelection
 signalregionsDict["1Lbb_SRLM_high_mct"]=  SRSelection + "&& mt>=100. && mt<160. && mct2>230. && mct2<=280." + CommonSelection
 signalregionsDict["1Lbb_SRLM_med_mct"]=  SRSelection + "&& mt>=100. && mt<160. && mct2>280." + CommonSelection
-# signalregionsDict["1Lbb_SRMMincl"]=  SRSelection + "&& mt>=160. && mct2>180." + CommonSelection
+signalregionsDict["1Lbb_SRMMincl"]=  SRSelection + "&& mt>=160. && mct2>180." + CommonSelection
 signalregionsDict["1Lbb_SRMM_low_mct"]=  SRSelection + "&& mt>=160. && mt<240. && mct2>180. && mct2<=230." + CommonSelection
 signalregionsDict["1Lbb_SRMM_med_mct"]=  SRSelection + "&& mt>=160. && mt<240. && mct2>230. && mct2<=280." + CommonSelection
 signalregionsDict["1Lbb_SRMM_high_mct"]=  SRSelection + "&& mt>=160. && mt<240. && mct2>280." + CommonSelection
-# signalregionsDict["1Lbb_SRHMincl"]=  SRSelection + "&& mt>=240. && mct2>180. && mlb1>120." + CommonSelection
+signalregionsDict["1Lbb_SRHMincl"]=  SRSelection + "&& mt>=240. && mct2>180. && mlb1>120." + CommonSelection
 signalregionsDict["1Lbb_SRHM_low_mct"]=  SRSelection + "&& mt>=240. && mct2>180. && mct2<=230. && mlb1>120." + CommonSelection
 signalregionsDict["1Lbb_SRHM_med_mct"]=  SRSelection + "&& mt>=240. && mct2>230. && mct2<=280. && mlb1>120." + CommonSelection
 signalregionsDict["1Lbb_SRHM_high_mct"]=  SRSelection + "&& mt>=240. && mct2>280. && mlb1>120." + CommonSelection
