@@ -34,7 +34,6 @@ preselectionsDict['strong1L_presel'] = "trigMatch_metTrig && nJet30>=2 && met>25
 preselectionsDict['strong1L_presel_electron'] = preselectionsDict['strong1L_presel'] + OneEleSelection
 preselectionsDict['strong1L_presel_muon'] = preselectionsDict['strong1L_presel'] + OneMuoSelection
 
-
 # ------- 2J region --------------------------------------------------------------------------- #
 SR2JSelection        = "lep1Pt<35 && nJet30>=2 && met>400. && mt>100. && (met/meffInc30) > 0.35 && (nJet30/lep1Pt)>0.1"
 signalregionsDict["strong1L_SR2J"]=  SR2JSelection + CommonSelection
@@ -45,7 +44,6 @@ signalregionsDict["strong1L_SR2JBTnomet"]="meffInc30>700. && lep1Pt<35 && nJet30
 signalregionsDict["strong1L_SR2JBTnomt"]="meffInc30>700. && lep1Pt<35 && nJet30>=2 && met>400. && (met/meffInc30) > 0.35 && (nJet30/lep1Pt)>0.1 && nBJet30_MV2c10>0" + CommonSelection
 signalregionsDict["strong1L_SR2JBVnomet"]="meffInc30>700. && lep1Pt<35 && nJet30>=2 && mt>100. && (met/meffInc30) > 0.35 && (nJet30/lep1Pt)>0.1 && nBJet30_MV2c10==0" + CommonSelection
 signalregionsDict["strong1L_SR2JBVnomt"]="meffInc30>700. && lep1Pt<35 && nJet30>=2 && met>400. && (met/meffInc30) > 0.35 && (nJet30/lep1Pt)>0.1 && nBJet30_MV2c10==0" + CommonSelection
-
 
 CR2JSelection        = "lep1Pt<35 && nJet30>=2 && met>300 &&met<400 && mt>50 &&mt<100 && (met/meffInc30)>0.15 && (nJet30/lep1Pt)>0.1"
 controlregionsDict["strong1L_TR2J"]=CR2JSelection +" && nBJet30_MV2c10>0" + CommonSelection
@@ -61,9 +59,15 @@ validationregionsDict["strong1L_VR2JmetBT"]=VR2JmetSelection + "&& nBJet30_MV2c1
 validationregionsDict["strong1L_VR2JmetBV"]=VR2JmetSelection + "&& nBJet30_MV2c10==0" + CommonSelection
 validationregionsDict["strong1L_VR2JmtBT"]=VR2JmtSelection + "&& nBJet30_MV2c10>0" + CommonSelection
 validationregionsDict["strong1L_VR2JmtBV"]=VR2JmtSelection + "&& nBJet30_MV2c10==0" + CommonSelection
+# validationregionsDict["strong1L_VR2JmtBVsecondbin"]=VR2JmtSelection + "&& nBJet30_MV2c10==0 && meffInc30 > 1150. && meffInc30 < 1600." + CommonSelection
 validationregionsDict["strong1L_VR2Jnomet"]=VR2JnometSelection+ CommonSelection
 validationregionsDict["strong1L_VR2Jnomt"]=VR2JnomtSelection + CommonSelection
-validationregionsDict["strong1L_VR2JmtBVthirdbin"]=VR2JmtSelection + "&& nBJet30_MV2c10==0 && meffInc30 > 1600. && meffInc30 < 2050." + CommonSelection
+# validationregionsDict["strong1L_VR2JmtBVthirdbin"]=VR2JmtSelection + "&& nBJet30_MV2c10==0 && meffInc30 > 1600. && meffInc30 < 2050." + CommonSelection
+
+# validationregionsDict["strong1L_VR2JmtBVthirdbin_loose1"]="lep1Pt<35 && nJet30>=2 && met>250 && mt>100 && (met/meffInc30)>0.10 && (nJet30/lep1Pt)>0.1 && nBJet30_MV2c10==0 && meffInc30 > 1600. && meffInc30 < 2050." + "&& nBJet30_MV2c10==0" + CommonSelection
+# validationregionsDict["strong1L_VR2JmtBVthirdbin_loose2"]="lep1Pt<35 && nJet30>=2 && met>250 && mt>75 && (met/meffInc30)>0.10 && (nJet30/lep1Pt)>0.1 && nBJet30_MV2c10==0 && meffInc30 > 1600. && meffInc30 < 2050." + "&& nBJet30_MV2c10==0" + CommonSelection
+# validationregionsDict["strong1L_VR2JmtBVthirdbin_loose3"]="lep1Pt<35 && nJet30>=2 && met>240 && mt>60 && (met/meffInc30)>0.0 && (nJet30/lep1Pt)>0.1 && nBJet30_MV2c10==0 && meffInc30 > 1600. && meffInc30 < 2050." + "&& nBJet30_MV2c10==0" + CommonSelection
+
 
 # ------- 4J regions for gluino gridx high x--------------------------------------------------------------------------- #
 SR4JhighxSelection   = "lep1Pt>35 && nJet30>=4 && nJet30<6 && met>300 && mt>520 && LepAplanarity>0.01 && met/meffInc30>0.20"
@@ -98,6 +102,11 @@ validationregionsDict["strong1L_VR4JhighxhybridBT"]=VR4JhighxhybridSelection + "
 validationregionsDict["strong1L_VR4JhighxhybridBV"]=VR4JhighxhybridSelection + "&& nBJet30_MV2c10==0" + CommonSelection
 validationregionsDict["strong1L_VR4Jhighxnoapl"]=VR4JhighxnoaplSelection+ CommonSelection
 validationregionsDict["strong1L_VR4Jhighxnomt"]=VR4JhighxnomtSelection+ CommonSelection
+
+validationregionsDict["strong1L_VR4JhighxmtBVbin2"]="lep1Pt>35 && nJet30>=4 && nJet30<6 && met>250 &&met<500 && mt>520 && LepAplanarity<0.01 && met/meffInc30>0.1 && meffInc30 > 1600. && meffInc30 < 2200." + "&& nBJet30_MV2c10==0" + CommonSelection
+validationregionsDict["strong1L_VR4JhighxmtBVbin2_loose1"]="lep1Pt>35 && nJet30>=4 && nJet30<6 && met>240 && mt>520 && LepAplanarity<0.01 && met/meffInc30>0.1 && meffInc30 > 1600. && meffInc30 < 2200." + "&& nBJet30_MV2c10==0" + CommonSelection
+validationregionsDict["strong1L_VR4JhighxmtBVbin2_loose2"]="lep1Pt>35 && nJet30>=4 && nJet30<6 && met>240 && mt>480 && LepAplanarity<0.01 && met/meffInc30>0.1 && meffInc30 > 1600. && meffInc30 < 2200." + "&& nBJet30_MV2c10==0" + CommonSelection
+validationregionsDict["strong1L_VR4JhighxmtBVbin2_loose3"]="lep1Pt>35 && nJet30>=4 && nJet30<6 && met>220 && mt>350 && LepAplanarity<0.01 && met/meffInc30>0.1 && meffInc30 > 1600. && meffInc30 < 2200." + "&& nBJet30_MV2c10==0" + CommonSelection
 
 
 # ------- 4J regions for gluino gridx low x--------------------------------------------------------------------------- #
