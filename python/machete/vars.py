@@ -54,9 +54,9 @@ jet1Eta = {
 
 meff = {
     "varexp" : "meffInc30",
-    "xmin" : 400,
-    "xmax" : 3000,
-    "nbins" : 26,
+    "xmin" : 500,
+    "xmax" : 3500,
+    "nbins" : 30,
     "unit" : "GeV",
     "xTitle" : "m_{eff}",
 }
@@ -304,11 +304,11 @@ metsig = {
     "unit" : "GeV",
 }
 
-metsig = {
+metphi = {
     "varexp" : "met_Phi",
     "xmin" : -3.15,
     "xmax" : 3.15,
-    "nbins" : 20,
+    "nbins" : 10,
     "xTitle" : "#phi(E_{T}^{miss})",
     "unit" : None,
 }
