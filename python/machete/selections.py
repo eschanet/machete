@@ -25,7 +25,8 @@ validationregionsDict = collections.OrderedDict()
 #
 ################################################################################################
 
-meff_binning["2J"] = [700.,1150.,1600.,2050.,2500.]
+# meff_binning["2J"] = [700.,1150.,1600.,2050.,2500.]
+meff_binning["2J"] = [750.,1050.,1350.,1650.,1950.]
 meff_binning["4Jlowx"] = [1000.,1600.,2200.,2800.]
 meff_binning["4Jhighx"] = [1000.,1600.,2200.,2800.]
 meff_binning["6J"] = [700.,1400,2100,2800,3500.]
@@ -48,6 +49,15 @@ signalregionsDict["strong1L_SR2JBVnomt"]="meffInc30>700. && lep1Pt<35 && nJet30>
 CR2JSelection        = "lep1Pt<35 && nJet30>=2 && met>300 &&met<400 && mt>50 &&mt<100 && (met/meffInc30)>0.15 && (nJet30/lep1Pt)>0.1"
 controlregionsDict["strong1L_TR2J"]=CR2JSelection +" && nBJet30_MV2c10>0" + CommonSelection
 controlregionsDict["strong1L_WR2J"]=CR2JSelection +" && nBJet30_MV2c10==0" + CommonSelection
+
+CR2JSelection_new       = "lep1Pt<35 && nJet30>=2 && met>400 && mt>50 &&mt<75 && (met/meffInc30)>0.35 && (nJet30/lep1Pt)>0.1"
+controlregionsDict["strong1L_TR2J_new"]=CR2JSelection_new +" && nBJet30_MV2c10>0" + CommonSelection
+controlregionsDict["strong1L_WR2J_new"]=CR2JSelection_new +" && nBJet30_MV2c10==0" + CommonSelection
+
+VR2JmtSelection_new      = "lep1Pt<35 && nJet30>=2 && met>400 && mt>75 && mt<100 && (met/meffInc30)>0.35 && (nJet30/lep1Pt)>0.1"
+validationregionsDict["strong1L_VR2JmtBT_new"]=VR2JmtSelection_new + "&& nBJet30_MV2c10>0" + CommonSelection
+validationregionsDict["strong1L_VR2JmtBV_new"]=VR2JmtSelection_new + "&& nBJet30_MV2c10==0" + CommonSelection
+
 
 VR2JmtSelection      = "lep1Pt<35 && nJet30>=2 && met>300 && met<400  && mt>100 && (met/meffInc30)>0.10 && (nJet30/lep1Pt)>0.1"
 VR2JmetSelection      = "lep1Pt<35 && nJet30>=2 && met>400  && mt>50 &&mt<100 && (met/meffInc30)>0.35 && (nJet30/lep1Pt)>0.1"
