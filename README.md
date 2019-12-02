@@ -1,4 +1,4 @@
-## Machete :hocho: :herb:
+## Machete 🔪 :herb:
 
 also **matchet**,
 
