@@ -1,4 +1,4 @@
-#!/usr/bin/python
+a#!/usr/bin/python
 
 """
 Plotting all the CR, VR plots as well as plots at preselection for TR and WR.
@@ -125,10 +125,10 @@ def run():
     regions = {}
     if args.analysis == "1Lbb" or args.analysis == "strong1L":
 
-        if not args.regions:
-            for key, cuts in me.preselectionsDict.iteritems():
-                if args.analysis in key:
-                    regions[key] = cuts
+        # if not args.regions:
+        #     for key, cuts in me.preselectionsDict.iteritems():
+        #         if args.analysis in key:
+        #             regions[key] = cuts
         tempDict = {}
         if args.crs: tempDict.update(me.controlregionsDict)
         if args.vrs: tempDict.update(me.validationregionsDict)
@@ -146,7 +146,7 @@ def run():
             if args.analysis in region:
                 if args.meffbins:
                     for tower,bins in me.meff_binning.iteritems():
-                        if (tower in region) and ((args.tower in region) or (not args.tower)):
+                        if (tower in region) and ((tower == args.tower) or (not args.tower)):
                             print('Tower %s in %s' % (tower,region))
                             if not (("VR"+tower in region) or ("TR"+tower in region) or ("WR"+tower in region)):
                                 continue
@@ -161,7 +161,7 @@ def run():
                                     print("We are already past the last one??")
                                     sys.exit(status=None)
                                 i += 1
-                elif (args.tower in region) or (not args.tower):
+                elif (args.tower == tower) or (not args.tower):
                     regions[region] = cuts
     else:
         print 'I do not know what analysis to consider, going for all preselections'
