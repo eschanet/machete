@@ -1,0 +1,23 @@
+#!/usr/bin/python
+
+'''
+This script transforms HistFitter XML files into JSON input for pyHF (using pyHF, lol). It simply extends the pyhf xml2json command to run with input and output directories.
+'''
+
+import os
+import glob
+import argparse
+import machete.pythonHelpers as ph
+
+parser = argparse.ArgumentParser(description="Script to convert HF xml files to json files used by pyHF")
+parser.add_argument("--input-dir", "-i", help="Directory where xml files are at", default="/project/etp5/eschanet/simplified-fit/HistFitterUser/config/1LbbFitSimplified_reco_backgroundonly_in_CR")
+parser.add_argument("--output-dir", "-o", help="Directory where to store the json files", default="/project/etp5/eschanet/simplified-fit/pyhf/json")
+parser.add_argument("--wildcard", "-w", help="Wildcard string used to match the xml files", default="*_NoSys.xml")
+args = parser.parse_args()
+
+ph.create_dir(args.output_dir)
+
+for f in glob.glob(os.path.join(args.input_dir,args.wildcard)):
+    filename = os.path.basename(f)
+    outputfile = filename.replace(".xml",".json")
+    os.system("pyhf xml2json {inputfile} --output-file {jsonpath}/{outputfile}".format(inputfile=f,jsonpath=args.output_dir, outputfile=outputfile))
