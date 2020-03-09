@@ -47,7 +47,7 @@ def getRegionFromExpression(expr):
             return 'SRMM'
         if 'SRHM' in expr:
             return 'SRHM'
-    elif args.analysis == 'strong1L':
+    elif (args.analysis == 'strong1L' or args.analysis == 'alt_strong-1L'):
         if args.background == 'zjets':
             #return without e.g. '_bin0' at the end
             return expr[:-5]
@@ -69,7 +69,7 @@ if args.analysis:
     logger.info('Considering analysis: %s' % args.analysis)
     if args.analysis == '1Lbb':
         args.regions = ['SRLMincl','SRMMincl','SRHMincl','SRLM','SRMM','SRHM','WR','STCR','TRLM','TRMM','TRHM','VRtt1on','VRtt2on','VRtt3on','VRtt1off','VRtt2off','VRtt3off']
-    elif args.analysis == 'strong1L':
+    elif (args.analysis == 'strong1L' or args.analysis == 'alt_strong-1L'):
         regions = ['SR2J','SR4Jhighx','SR4Jlowx','SR6J', 'TR2J', 'WR2J', 'TR4Jhighx', 'WR4Jhighx', 'TR4Jlowx', 'WR4Jlowx', 'TR6J', 'WR6J', 'VR2Jmet','VR2Jmt', 'VR4Jhighxapl', 'VR4Jhighxmt','VR4Jlowxhybrid','VR4Jlowxapl','VR6Japl','VR6Jmt']
         meff_binning = collections.OrderedDict()
         meff_binning["2J"] = [700.,1150.,1600.,2050.,2500.]
@@ -77,18 +77,39 @@ if args.analysis:
         meff_binning["4Jhighx"] = [1000.,1600.,2200.,2800.]
         meff_binning["6J"] = [700.,1400,2100,2800,3500.]
 
+        if args.analysis == 'alt_strong-1L':
+            regions = ['SR2JBV','SR2JBT','SR4JlowxBV','SR4JlowxBT','SR4JhighxBV','SR4JhighxBT','SR6JBV','SR6JBT', 'TR2J', 'WR2J', 'TR4J', 'WR4J', 'TR6J', 'WR6J', 'VR2JBT','VR2JBV', 'VR4JBT', 'VR4JBV','VR6JBV','VR6JBT']
+            meff_binning = collections.OrderedDict()
+            meff_binning["2J"] = [700.,1300.,1900.,2500.]
+            meff_binning["4J"] = [1000.,1600.,2200.,2800.]
+            meff_binning["SR6J"] = [700.,1400,2100,2800,3500.]
+            meff_binning["TR6J"] = [700.,1400,2100,2800.,3500.]
+            meff_binning["WR6J"] = [700.,1400,2100,2800.,3500.]
+            meff_binning["VR6J"] = [700.,1400,2100,2800.,3500.]
+
+        print(regions)
         for region in regions:
             for tower,bins in meff_binning.items():
                 if tower in region:
                     logger.debug('Tower %s in %s' % (tower,region))
-                    if ("VR"+tower in region) or ("TR"+tower in region) or ("WR"+tower in region):
-                        #dont differentiate between BT and BV
-                        for i,bin in enumerate(bins[:-1]):
-                            args.regions.append(region+"EM"+"_bin{}".format(i+1))
-                    else:
-                        for btag in ["BV", "BT"]:
+
+                    if args.analysis == 'alt_strong-1L':
+                        if (not 'BV' in region) and (not 'BT' in region) and (not 'WR' in region) and (not 'TR' in region):
+                            print("DISCARDING " +region)
+                            continue
+                        else:
+                            #dont differentiate between BT and BV
                             for i,bin in enumerate(bins[:-1]):
-                                args.regions.append(region+btag+"EM"+"_bin{}".format(i+1))
+                                args.regions.append(region+"EM"+"_bin{}".format(i+1))
+                    else:
+                        if ("VR"+tower in region) or ("TR"+tower in region) or ("WR"+tower in region):
+                            #dont differentiate between BT and BV
+                            for i,bin in enumerate(bins[:-1]):
+                                args.regions.append(region+"EM"+"_bin{}".format(i+1))
+                        else:
+                            for btag in ["BV", "BT"]:
+                                for i,bin in enumerate(bins[:-1]):
+                                    args.regions.append(region+btag+"EM"+"_bin{}".format(i+1))
 
     else:
         logger.error('Analysis not known. Dropping out.')
@@ -315,7 +336,7 @@ def TheorUnc(generatorSyst):
 
 '''.format(bkg=args.background)
 
-    elif args.analysis == 'strong1L':
+    elif (args.analysis == 'strong1L' or args.analysis == 'alt_strong-1L'):
 
         main = r''''''
 
