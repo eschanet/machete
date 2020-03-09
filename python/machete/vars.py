@@ -312,3 +312,21 @@ metphi = {
     "xTitle" : "#phi(E_{T}^{miss})",
     "unit" : None,
 }
+
+jet1Phi = {
+    "varexp" : "jet1Phi",
+    "xmin" : -3.15,
+    "xmax" : 3.15,
+    "nbins" : 10,
+    "xTitle" : "Leading jet #phi",
+    "unit" : None,
+}
+
+lep1Phi = {
+    "varexp" : "lep1Phi",
+    "xmin" : -3.15,
+    "xmax" : 3.15,
+    "nbins" : 10,
+    "xTitle" : "Lepton #phi",
+    "unit" : None,
+}

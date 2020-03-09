@@ -36,3 +36,5 @@ varsDict['mlb1'] = vars.mlb1
 varsDict['mbb'] = vars.mbb
 varsDict['dRJet'] = vars.dRJet
 varsDict['dphimetlep'] = vars.dphimetlep
+varsDict['lep1Phi'] = vars.lep1Phi
+varsDict['jet1Phi'] = vars.jet1Phi

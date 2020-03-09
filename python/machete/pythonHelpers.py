@@ -30,6 +30,10 @@ class cd:
     def __exit__(self, etype, value, traceback):
         os.chdir(self.savedPath)
 
+def create_dir(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
 from itertools import tee
 def pairwise(iterable):
     "s -> (s0,s1), (s1,s2), (s2, s3), ..."
