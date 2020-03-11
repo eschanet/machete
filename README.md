@@ -10,4 +10,4 @@ UK: &nbsp;<span style="font-size:medium;">/məˈʃet.i/</span> &nbsp; &nbsp; &nb
 
 In order to e.g. use the python helper scripts, add this package to your PYTHONPATH with
 
-export PYTHONPATH=<path-to-machete>/machete/python:$PYTHONPATH
+export PYTHONPATH=\<path-to-machete\>/machete/python:$PYTHONPATH
