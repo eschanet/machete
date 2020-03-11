@@ -98,7 +98,7 @@ normWeight = array('d', [0])
 ntree.Branch(args.normBranch,normWeight,'{}/D'.format(args.normBranch))
 
 for i in range(nentries):
-    if i % 1000 == 0 :
+    if i % 100000 == 0 :
         logger.info("Processed {} events".format(i))
     tree.GetEntry(i)
     normWeight[0] = ROOT.Double(eventWeight[0]*xsec/sumofweights) if args.applyGenWeight else ROOT.Double(xsec/sumofweights)
