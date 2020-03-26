@@ -5,7 +5,7 @@ This script transforms pyHF JSON output into HF harvests, used for the tradition
 '''
 
 import os
-import glob
+import re
 import argparse
 import json
 
@@ -14,7 +14,7 @@ from commonHelpers.logger import logger
 logger = logger.getChild("machete")
 
 parser = argparse.ArgumentParser(description="Script to convert pyHF JSON output into HF harvest JSON")
-parser.add_argument("--input", "-i", help="Input JSON files (allows wildcarding)", default="*.json")
+parser.add_argument("--input-files", "-i", help="Input JSON files (allows regex)", default=".*\.json")
 parser.add_argument("--output", "-o", help="Output harvest file", default="harvest.json")
 args = parser.parse_args()
 
@@ -24,11 +24,9 @@ def is_file_empty(filename):
 
 output_data = []
 
-for filename in glob.glob(args.input):
-    # Check for format of input jsons
-    if not "Sig_C1N2_Wh_hbb_" in filename:
-        logger.error("I'm expecting a different input format, sorry.")
-        continue
+res = [f for f in os.listdir(os.getcwd()) if re.search(args.input_files, f)]
+for filename in res:
+
     if is_file_empty(filename):
         logger.error("File seems to be empty")
         continue
@@ -36,7 +34,7 @@ for filename in glob.glob(args.input):
     logger.info("Processing %s" % filename)
     with open(filename) as f:
         json_data = json.load(f)
-        masses = os.path.basename(filename).replace("Sig_C1N2_Wh_hbb_","").replace("_NoSys.json","").replace("p0",".0").replace("p5",".5").split("_")
+        masses = os.path.basename(filename).replace("Sig_C1N2_Wh_hbb_","").replace("_NoSys.json","").replace(".json","").replace("p0",".0").replace("p5",".5").split("_")
         output_data.append(
             {
                 "CLs" : json_data["CLs_obs"],
