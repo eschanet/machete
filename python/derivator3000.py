@@ -3,7 +3,7 @@
 import os
 import glob
 
-from slurmy import JobHandler, Slurm, Singularity3Wrapper
+from slurmy import JobHandler, Slurm, Singularity3Wrapper, SuccessTrigger
 
 sw = Singularity3Wrapper('/cvmfs/atlas.cern.ch/repo/containers/images/singularity/x86_64-slc6.img')
 jh = JobHandler(wrapper = sw,work_dir="/project/etp3/eschanet/collect", name="Reco_tf", run_max=50)
@@ -32,9 +32,7 @@ export ATLAS_LOCAL_ROOT_BASE=/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase
 source ${{ATLAS_LOCAL_ROOT_BASE}}/user/atlasLocalSetup.sh
 acmSetup
 
-cd .. & mkdir run
-
-cd run
+cd ..
 
 #Need to do this because somehow I dont have write permission for some of the created files?
 chmod -R 755 *
@@ -45,12 +43,12 @@ mkdir {outdir}
 
 Reco_tf.py --skipEvents {skipEvents} --maxEvents {maxEvents} --inputEVNTFile {inputfile} --outputDAODFile out.pool.root --reductionConf TRUTH3 --preExec='from BTagging.BTaggingFlags import BTaggingFlags;BTaggingFlags.CalibrationTag = "BTagCalibRUN12-08-47"'
 
-
-# Not working?
-if if [[ "$?" = "0" ]] && cp DAOD_TRUTH3.out.pool.root {outputfile}; then
-    echo "Touching test file"
-    @SLURMY.SUCCESS
+if [[ "$?" = "0" ]] && cp DAOD_TRUTH3.out.pool.root {outputfile}; then
+    echo "Copied over outputfile: {outputfile}"
 fi
+
+echo "Copying logs over"
+cp log.EVNTtoDAOD {outputfile}_log.EVNTtoDAOD
 
 """
 
@@ -63,7 +61,7 @@ for indirectory,subdir,filenames  in os.walk(indir):
     # print(indirectory)
     for inputfile_path in glob.glob(os.path.join(indirectory, "*.root*")):
         inputfile = os.path.basename(inputfile_path)
-        # print(inputfile)
+        print(inputfile)
         for skipEvents in range(0, totalEvents-maxEvents+1, maxEvents):
             # print("Adding job for inputfile={}, skipEvents={}".format(inputfile, skipEvents))
             dirname = os.path.basename(os.path.normpath(indirectory))
@@ -72,9 +70,10 @@ for indirectory,subdir,filenames  in os.walk(indir):
             myoutdir = os.path.join(outdir,dirname)
             outputfile = outputfile+"_{}".format(skipEvents)
 
+            st = SuccessTrigger(outputfile,20)
             test_finished = os.path.join(outdir,dirname,inputfile+"_testfile")
             # print(test_finished)
             jh.add_job(run_script=run_script.format(inputfile=inputfile, indir=indirectory, outdir=myoutdir, outputfile=outputfile,finished_file=test_finished, skipEvents=skipEvents, maxEvents=maxEvents),
-                       name="pantagruel_{}_{}".format(inputfile.replace(".","_"), skipEvents), backend=Slurm(mem="3500mb"))
-    break
+                       name="pantagruel_{}_{}".format(inputfile.replace(".","_"), skipEvents), output=outputfile, success_func=st, backend=Slurm(mem="3500mb"))
+
 jh.run_jobs()
