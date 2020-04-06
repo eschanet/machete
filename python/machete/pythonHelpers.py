@@ -18,6 +18,15 @@ def list_treenames(file):
     tf.Close()
     return trees_list
 
+def list_branches(file,tree):
+    tf = ROOT.TFile.Open(file,"READ") if isinstance(file,basestring) else file
+    tree = tf.Get(tree)
+    branches_list = []
+    for key in tree.GetListOfBranches():
+        branches_list.append(key.GetName())
+    tf.Close()
+    return branches_list
+
 class cd:
     """Context manager for changing the current working directory"""
     def __init__(self, newPath):
