@@ -78,5 +78,5 @@ for file in glob.glob(os.path.join(args.input_dir,args.wildcard)):
         pyhf_json["channels"].append(channel)
         pyhf_json["observations"].append(observation)
 
-with open(os.path.join(args.out_dir,'pyhfFit.json'), 'w') as outfile:
+with open(os.path.join(args.output_dir,'pyhfFit.json'), 'w') as outfile:
     json.dump(pyhf_json, outfile)
