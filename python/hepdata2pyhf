@@ -1,0 +1,82 @@
+#!/usr/bin/python
+
+'''
+This script transforms HEPdata yaml files into PYHF json files.
+Each YAML files should contain one SR channel with as many bins as you would like to have.
+'''
+
+import os
+import glob
+import argparse
+import json
+import copy
+import yaml
+import pprint
+pp = pprint.PrettyPrinter(indent=8)
+
+import machete.pythonHelpers as ph
+
+import logging
+from commonHelpers.logger import logger
+logger = logger.getChild("machete")
+
+parser = argparse.ArgumentParser(description="Script to convert HEPdata yaml files into PYHF json files")
+parser.add_argument("--input-dir", "-i", help="Directory where yaml files are at", default=os.getcwd())
+parser.add_argument("--output-dir", "-o", help="Directory where to store the json files", default=os.getcwd())
+parser.add_argument("--wildcard", "-w", help="Wildcard string used to match the yaml files", default="*.yaml")
+parser.add_argument("--bkg-key", help="Key used to find the total fitted background field", default="Fitted backgrounds")
+parser.add_argument("--obs-key", help="Key used to find the observed field", default="Observed events")
+parser.add_argument("--split_bkg", help="Split the background into multiple samples instead of one", action='store_true')
+args = parser.parse_args()
+
+ph.create_dir(args.output_dir)
+
+pyhf_json = {
+    "channels" : [],
+    "measurements" : [{"config": {"parameters": [{"auxdata": [1.0], "bounds": [[0.84,1.16]],"fixed": True,"inits": [1.0],"name": "lumi","sigmas": [0.032]}],"poi": "mu_Sig"},"name": "NormalMeasurement"}],
+    "observations" : [],
+    "version" : "1.0.0"
+}
+
+channel_dummy = {"name": "dummy","samples": [{"data": [],"modifiers": [{"data": {"hi_data": [],"lo_data": []},"name": "totalError","type": "histosys"}],"name": "Bkg"},{"data": [],"modifiers": [{"data": None,"name": "lumi","type": "lumi"},{"data": None,"name": "mu_Sig","type": "normfactor"}],"name": "Sig_Yields"}]}
+
+for file in glob.glob(os.path.join(args.input_dir,args.wildcard)):
+    with open(file) as f:
+        logger.info("Reading " + file)
+        loaded_yaml = yaml.safe_load(f)
+        # pp.pprint(loaded_yaml)
+
+        name = os.path.basename(file).replace("yaml","")
+        # Get an empty channel from the dummy
+        channel = copy.deepcopy(channel_dummy)
+        channel["name"] = name
+        observation = {"name": name, "data":[]}
+
+        # Find the index at which to find the total fitted background values
+        fitted_index = loaded_yaml['independent_variables'][0].get('values',[]).index({'value': args.bkg_key})
+        logger.info('Index of fitted bkgs is: ' + str(fitted_index))
+
+        # Find the index at which to find the observed values
+        obs_index = loaded_yaml['independent_variables'][0].get('values',[]).index({'value': args.obs_key})
+        logger.info('Index of observed events is: ' + str(obs_index))
+
+        # Now let's iterate over all SR bins
+        for bin in loaded_yaml.get('dependent_variables', []):
+            values = bin.get('values',[])
+            observed = int(values[obs_index].get('value', '0'))
+            fitted = float(values[fitted_index].get('value', '0'))
+            fitted_error = float(values[fitted_index].get('errors', [])[0].get('symerror', 0.0))
+
+            channel["samples"][0]["data"].append(fitted)
+            channel["samples"][0]["modifiers"][0]["data"]["hi_data"].append(fitted+fitted_error)
+            channel["samples"][0]["modifiers"][0]["data"]["lo_data"].append(fitted-fitted_error)
+            observation["data"].append(observed)
+            channel["samples"][1]["data"].append(0.0)
+
+            # print("Got a bin ", channel["samples"][0]["data"])
+
+        pyhf_json["channels"].append(channel)
+        pyhf_json["observations"].append(observation)
+
+with open(os.path.join(args.out_dir,'pyhfFit.json'), 'w') as outfile:
+    json.dump(pyhf_json, outfile)
