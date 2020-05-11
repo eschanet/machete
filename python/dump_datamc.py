@@ -134,6 +134,7 @@ def run():
         tempDict = {}
         if args.crs: tempDict.update(me.controlregionsDict)
         if args.vrs: tempDict.update(me.validationregionsDict)
+        if args.srs: tempDict.update(me.signalregionsDict)
         if args.regions:
             tempDict = {}
             for region in args.regions:
@@ -152,7 +153,7 @@ def run():
                         if (tower in region) and ((tower == args.tower) or (not args.tower)):
                             print('Tower %s in %s' % (tower,region))
                             tower = tower.replace("SR","").replace("VR","").replace("TR","").replace("WR","")
-                            if not (("VR"+tower in region) or ("TR"+tower in region) or ("WR"+tower in region)):
+                            if not (("VR"+tower in region) or ("TR"+tower in region) or ("WR"+tower in region) or ("SR"+tower in region)):
                                 continue
                             if (not 'BV' in region) and (not 'BT' in region) and (not 'WR' in region) and (not 'TR' in region):
                                 print("DISCARDING " +region)
@@ -169,8 +170,11 @@ def run():
                                     print("We are already past the last one??")
                                     sys.exit(status=None)
                                 i += 1
-                elif (args.tower == tower) or (not args.tower):
+                elif not args.tower:
                     regions[region] = cuts
+                elif args.tower:
+                    print("Sorry, tower not implemented without meffbins")
+                    sys.exit()
     else:
         print 'I do not know what analysis to consider, going for all preselections'
         regions = me.preselectionsDict
@@ -187,7 +191,7 @@ def run():
         if args.normalize:
             yTitle = 'Normalized to unit area'
 
-        weights="eventWeight*genWeight*leptonWeight*jvtWeight*pileupWeight*bTagWeight"
+        weights="genWeight*leptonWeight*jvtWeight*pileupWeight*bTagWeight"
         if args.campaign == 'mc16d':
             inputlumi = 44.3 #44.3
             cut+="*(RandomRunNumber >= 324320 && RandomRunNumber <= 337833)"
@@ -204,12 +208,17 @@ def run():
         if args.add_cut:
             cut += "&& ({})".format(args.add_cut)
 
-        if args.contribution:
-            tp = TreePlotter(plotType="BGContributionPlot", weight=weights, cut=cut, inputLumi=0.001*(inputlumi/139), targetLumi=inputlumi, addOverflowToLastBin=False, normStack=args.normalize)#43.5844
-        elif args.significance:
-            tp = TreePlotter(plotType="SignificanceScanPlot", weight=weights, cut=cut, inputLumi=0.001*(inputlumi/139), targetLumi=inputlumi, addOverflowToLastBin=False, normStack=False)#43.5844
+        if 'SR' in region:
+            overflow=True
         else:
-            tp = TreePlotter(plotType="DataMCRatioPlot", weight=weights, cut=cut, inputLumi=0.001*(inputlumi/139), targetLumi=inputlumi, addOverflowToLastBin=False, normStack=args.normalize)#43.5844
+            overflow=False
+            
+        if args.contribution:
+            tp = TreePlotter(plotType="BGContributionPlot",inputLumi=0.001*(inputlumi/139), targetLumi=inputlumi, addOverflowToLastBin=overflow, normStack=args.normalize)#43.5844
+        elif args.significance:
+            tp = TreePlotter(plotType="SignificanceScanPlot", inputLumi=0.001*(inputlumi/139), targetLumi=inputlumi, addOverflowToLastBin=overflow, normStack=False)#43.5844
+        else:
+            tp = TreePlotter(plotType="DataMCRatioPlot", inputLumi=0.001*(inputlumi/139), targetLumi=inputlumi, addOverflowToLastBin=overflow, normStack=args.normalize)#43.5844
         if args.dijets:
             trees = ["ttbar", "singletop", "wjets", "zjets", "diboson", "ttv", "tth","vh", "multiboson", "dijets"]
         else:
@@ -226,14 +235,17 @@ def run():
                             tower = tower.replace("SR","").replace("VR","").replace("TR","").replace("WR","")
                             mytower=tower
                             continue
-                    nf = me.normFactorsDict["mu_"+name+"_"+mytower+"_"+region[-4:]]
+                    name = "mu_"+name+"_"+mytower+"_"+region[-4:]
+                    nf = me.normFactorsDict[name] if name != "mu_Top_4J_bin3" else me.normFactorsDict["mu_Top_4J_bin2"]
+
+            finalcut = "({})*({}*eventWeight)".format(cut,weights)
             if treename == "wjets":
                 #fix eventweights, thanks Sherpa ... :-(
-                # evtWeight = "((eventWeight>-100.)*(eventWeight<100.))"
-                evtWeight = "(1)"
-                tp.addProcessTree(me.names[treename], args.input_bkg, treename+"_NoSys",  scale=nf, cut=evtWeight,style="background", color=me.colors[treename])
+                evtWeight = "(((fabs(eventWeight)<100.)*eventWeight) + (eventWeight>100.) - (eventWeight<-100.))"
+                mycut = "({})*({})*({})".format(cut,weights,evtWeight)
+                tp.addProcessTree(me.names[treename], args.input_bkg, treename+"_NoSys",  scale=nf, cut=mycut,style="background", color=me.colors[treename])
             else:
-                tp.addProcessTree(me.names[treename], args.input_bkg, treename+"_NoSys",  scale=nf, style="background", color=me.colors[treename])
+                tp.addProcessTree(me.names[treename], args.input_bkg, treename+"_NoSys",  scale=nf, cut=finalcut, style="background", color=me.colors[treename])
 
             if args.significance:
                 if args.analysis == "strong1L":
@@ -265,7 +277,7 @@ def run():
                     ]
                     for tower,name,treename in signalpoints:
                         if tower in region:
-                            tp.addProcessTree(name,args.input_signal, treename+"_NoSys", style="signal", lineStyle=1, lineWidth=2)
+                            tp.addProcessTree(name,args.input_signal, treename+"_NoSys", style="signal", cut=finalcut, lineStyle=1, lineWidth=2)
 
 
         data_process = 'data'
@@ -276,7 +288,7 @@ def run():
         elif args.campaign == 'mc16e':
             data_process = 'data 18'
 
-        tp.addProcessTree(data_process, args.input_data, "data", style="data")
+        tp.addProcessTree(data_process, args.input_data, "data",cut=finalcut, style="data")
 
 
         gst.noLinesForBkg = True
