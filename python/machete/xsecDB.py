@@ -64,8 +64,17 @@ class CrossSectionDB:
     def efficiency(self, dsid, etag=None):
         return self.getMatch("genFiltEff", dsid, etag)
 
+    def kFactor(self, dsid, etag=None):
+        return self.getMatch("kFactor", dsid, etag)
+
     def xsecTimesEff(self, dsid, etag=None):
         try:
             return self.xsec(dsid, etag) * self.efficiency(dsid, etag)
+        except:
+            return None
+
+    def xsecTimesEffTimeskFac(self, dsid, etag=None):
+        try:
+            return self.xsec(dsid, etag) * self.efficiency(dsid, etag) * self.kFactor(dsid, etag)
         except:
             return None
