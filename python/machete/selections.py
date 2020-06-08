@@ -32,13 +32,23 @@ meff_binning["4Jlowx"] = [1000.,1600.,2200.,2800.]
 meff_binning["4Jhighx"] = [1000.,1600.,2200.,2800.]
 meff_binning["6J"] = [700.,1400,2100,2800,3500.]
 
-preselectionsDict['strong1L_presel'] = "trigMatch_metTrig && nJet30>=2 && met>250 && mt>50 && nLep_base==1&&nLep_signal==1"
-preselectionsDict['strong1L_presel_electron'] = preselectionsDict['strong1L_presel'] + OneEleSelection
-preselectionsDict['strong1L_presel_muon'] = preselectionsDict['strong1L_presel'] + OneMuoSelection
+# preselectionsDict['strong1L_presel'] = "trigMatch_metTrig && nJet30>=2 && met>250 && mt>50 && nLep_base==1&&nLep_signal==1"
+# preselectionsDict['strong1L_presel_electron'] = preselectionsDict['strong1L_presel'] + OneEleSelection
+# preselectionsDict['strong1L_presel_muon'] = preselectionsDict['strong1L_presel'] + OneMuoSelection
 
 preselectionsDict['alt_strong-1L_presel'] = "trigMatch_metTrig && nJet30>=2 && met>250 && mt>50 && nLep_base==1&&nLep_signal==1"
-preselectionsDict['alt_strong-1L_presel_electron'] = preselectionsDict['strong1L_presel'] + OneEleSelection
-preselectionsDict['alt_strong-1L_presel_muon'] = preselectionsDict['strong1L_presel'] + OneMuoSelection
+preselectionsDict['alt_strong-1L_presel_BT'] = "trigMatch_metTrig && nJet30>=2 && met>250 && mt>50 && nLep_base==1&&nLep_signal==1" + btag
+preselectionsDict['alt_strong-1L_presel_BV'] = "trigMatch_metTrig && nJet30>=2 && met>250 && mt>50 && nLep_base==1&&nLep_signal==1" + bveto
+# preselectionsDict['alt_strong-1L_presel_electron'] = preselectionsDict['alt_strong-1L_presel'] + OneEleSelection
+# preselectionsDict['alt_strong-1L_presel_muon'] = preselectionsDict['alt_strong-1L_presel'] + OneMuoSelection
+
+# preselectionsDict['alt_strong-1L_presel_ptW-slice-1'] = "trigMatch_metTrig && nJet30>=2 && met>250 && mt>50 && nLep_base==1&&nLep_signal==1 && sqrt(pow(lep1Pt*cos(lep1Phi)+met*cos(met_Phi), 2)+pow(lep1Pt*sin(lep1Phi)+met*sin(met_Phi), 2)) < 70"
+# preselectionsDict['alt_strong-1L_presel_ptW-slice-2'] = "trigMatch_metTrig && nJet30>=2 && met>250 && mt>50 && nLep_base==1&&nLep_signal==1 && sqrt(pow(lep1Pt*cos(lep1Phi)+met*cos(met_Phi), 2)+pow(lep1Pt*sin(lep1Phi)+met*sin(met_Phi), 2)) >= 70 && sqrt(pow(lep1Pt*cos(lep1Phi)+met*cos(met_Phi), 2)+pow(lep1Pt*sin(lep1Phi)+met*sin(met_Phi), 2)) < 140"
+# preselectionsDict['alt_strong-1L_presel_ptW-slice-3'] = "trigMatch_metTrig && nJet30>=2 && met>250 && mt>50 && nLep_base==1&&nLep_signal==1 && sqrt(pow(lep1Pt*cos(lep1Phi)+met*cos(met_Phi), 2)+pow(lep1Pt*sin(lep1Phi)+met*sin(met_Phi), 2)) >= 140 && sqrt(pow(lep1Pt*cos(lep1Phi)+met*cos(met_Phi), 2)+pow(lep1Pt*sin(lep1Phi)+met*sin(met_Phi), 2)) < 280"
+# preselectionsDict['alt_strong-1L_presel_ptW-slice-4'] = "trigMatch_metTrig && nJet30>=2 && met>250 && mt>50 && nLep_base==1&&nLep_signal==1 && sqrt(pow(lep1Pt*cos(lep1Phi)+met*cos(met_Phi), 2)+pow(lep1Pt*sin(lep1Phi)+met*sin(met_Phi), 2)) >= 280 && sqrt(pow(lep1Pt*cos(lep1Phi)+met*cos(met_Phi), 2)+pow(lep1Pt*sin(lep1Phi)+met*sin(met_Phi), 2)) < 500"
+# preselectionsDict['alt_strong-1L_presel_ptW-slice-5'] = "trigMatch_metTrig && nJet30>=2 && met>250 && mt>50 && nLep_base==1&&nLep_signal==1 && sqrt(pow(lep1Pt*cos(lep1Phi)+met*cos(met_Phi), 2)+pow(lep1Pt*sin(lep1Phi)+met*sin(met_Phi), 2)) >= 500 && sqrt(pow(lep1Pt*cos(lep1Phi)+met*cos(met_Phi), 2)+pow(lep1Pt*sin(lep1Phi)+met*sin(met_Phi), 2)) < 1000"
+# preselectionsDict['alt_strong-1L_presel_ptW-slice-6'] = "trigMatch_metTrig && nJet30>=2 && met>250 && mt>50 && nLep_base==1&&nLep_signal==1 && sqrt(pow(lep1Pt*cos(lep1Phi)+met*cos(met_Phi), 2)+pow(lep1Pt*sin(lep1Phi)+met*sin(met_Phi), 2)) >= 1000"
+
 
 # ------- 2J region --------------------------------------------------------------------------- #
 SR2JSelection        = "lep1Pt<35 && nJet30>=2 && met>400 && mt>100. && met/meffInc30>0.35 && (nJet30/lep1Pt)>0.1"
@@ -267,9 +277,9 @@ validationregionsDict["alt_strong-1L_VR6JBV"]=VR6JSelection + "&& nBJet30_MV2c10
 ################################################################################################
 
 
-preselectionsDict['1Lbb_presel'] = "trigMatch_metTrig && nJet30>=2 && nJet30<=3 && nBJet30_MV2c10>=1 && met>220 && mt>50 && nLep_base==1 && nLep_signal==1"
-preselectionsDict['1Lbb_presel_electron'] = preselectionsDict['1Lbb_presel'] + OneEleSelection
-preselectionsDict['1Lbb_presel_muon'] = preselectionsDict['1Lbb_presel'] + OneMuoSelection
+# preselectionsDict['1Lbb_presel'] = "trigMatch_metTrig && nJet30>=2 && nJet30<=3 && nBJet30_MV2c10>=1 && met>220 && mt>50 && nLep_base==1 && nLep_signal==1"
+# preselectionsDict['1Lbb_presel_electron'] = preselectionsDict['1Lbb_presel'] + OneEleSelection
+# preselectionsDict['1Lbb_presel_muon'] = preselectionsDict['1Lbb_presel'] + OneMuoSelection
 
 SRSelection        = "met>240. && nJet30>=2 && nJet30<=3 && nBJet30_MV2c10==2 && mbb>100. && mbb<140."
 signalregionsDict["1Lbb_SRLMincl"]=  SRSelection + "&& mt>=100. && mct2>180." + CommonSelection
@@ -316,6 +326,59 @@ validationregionsDict["1Lbb_VRtt3on"]=  VRSelection2 + "&& mt>=240. && met>220."
 #
 ################################################################################################
 
-preselectionsDict['weak_presel'] = "trigMatch_metTrig && nJet30>=2 && nJet30<=3 && met>220 && mt>50 && nLep_base==1 && nLep_signal==1"
-preselectionsDict['weak_presel_electron'] =  preselectionsDict['weak_presel'] + OneEleSelection
-preselectionsDict['weak_presel_muon'] = preselectionsDict['weak_presel'] + OneLepSelection
+# preselectionsDict['weak_presel'] = "trigMatch_metTrig && nJet30>=2 && nJet30<=3 && met>220 && mt>50 && nLep_base==1 && nLep_signal==1"
+# preselectionsDict['weak_presel_electron'] =  preselectionsDict['weak_presel'] + OneEleSelection
+# preselectionsDict['weak_presel_muon'] = preselectionsDict['weak_presel'] + OneLepSelection
+
+
+################################################################################################
+#
+#                       2L0J
+#
+################################################################################################
+
+Common = "nLeps==2 && L2nCentralBJet==0 && MET>110000 && METsig>10"
+DFSelection = Common + " && L2isEMU && L2Mll>100000"
+SFSelection = Common + " && (L2isMUMU || L2isEMU) && L2Mll>121200"
+ZeroJet = " && L2nCentralLightJet==0"
+OneJet = " && L2nCentralLightJet==1"
+
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_0J_a"] = DFSelection + ZeroJet + " && L2MT2>100000 && L2MT2<=105000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_0J_b"] = DFSelection + ZeroJet + " && L2MT2>105000 && L2MT2<=110000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_0J_c"] = DFSelection + ZeroJet + " && L2MT2>110000 && L2MT2<=120000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_0J_d"] = DFSelection + ZeroJet + " && L2MT2>120000 && L2MT2<=140000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_0J_e"] = DFSelection + ZeroJet + " && L2MT2>140000 && L2MT2<=160000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_0J_f"] = DFSelection + ZeroJet + " && L2MT2>160000 && L2MT2<=180000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_0J_g"] = DFSelection + ZeroJet + " && L2MT2>180000 && L2MT2<=220000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_0J_h"] = DFSelection + ZeroJet + " && L2MT2>220000 && L2MT2<=260000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_0J_i"] = DFSelection + ZeroJet + " && L2MT2>260000"
+
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_0J_a"] = SFSelection + ZeroJet + " && L2MT2>100000 && L2MT2<=105000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_0J_b"] = SFSelection + ZeroJet + " && L2MT2>105000 && L2MT2<=110000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_0J_c"] = SFSelection + ZeroJet + " && L2MT2>110000 && L2MT2<=120000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_0J_d"] = SFSelection + ZeroJet + " && L2MT2>120000 && L2MT2<=140000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_0J_e"] = SFSelection + ZeroJet + " && L2MT2>140000 && L2MT2<=160000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_0J_f"] = SFSelection + ZeroJet + " && L2MT2>160000 && L2MT2<=180000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_0J_g"] = SFSelection + ZeroJet + " && L2MT2>180000 && L2MT2<=220000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_0J_h"] = SFSelection + ZeroJet + " && L2MT2>220000 && L2MT2<=260000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_0J_i"] = SFSelection + ZeroJet + " && L2MT2>260000"
+
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_1J_a"] = DFSelection + OneJet + " && L2MT2>100000 && L2MT2<=105000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_1J_b"] = DFSelection + OneJet + " && L2MT2>105000 && L2MT2<=110000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_1J_c"] = DFSelection + OneJet + " && L2MT2>110000 && L2MT2<=120000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_1J_d"] = DFSelection + OneJet + " && L2MT2>120000 && L2MT2<=140000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_1J_e"] = DFSelection + OneJet + " && L2MT2>140000 && L2MT2<=160000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_1J_f"] = DFSelection + OneJet + " && L2MT2>160000 && L2MT2<=180000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_1J_g"] = DFSelection + OneJet + " && L2MT2>180000 && L2MT2<=220000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_1J_h"] = DFSelection + OneJet + " && L2MT2>220000 && L2MT2<=260000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__DF_1J_i"] = DFSelection + OneJet + " && L2MT2>260000"
+
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_1J_a"] = SFSelection + OneJet + " && L2MT2>100000 && L2MT2<=105000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_1J_b"] = SFSelection + OneJet + " && L2MT2>105000 && L2MT2<=110000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_1J_c"] = SFSelection + OneJet + " && L2MT2>110000 && L2MT2<=120000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_1J_d"] = SFSelection + OneJet + " && L2MT2>120000 && L2MT2<=140000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_1J_e"] = SFSelection + OneJet + " && L2MT2>140000 && L2MT2<=160000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_1J_f"] = SFSelection + OneJet + " && L2MT2>160000 && L2MT2<=180000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_1J_g"] = SFSelection + OneJet + " && L2MT2>180000 && L2MT2<=220000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_1J_h"] = SFSelection + OneJet + " && L2MT2>220000 && L2MT2<=260000"
+signalregionsDict["EwkTwoLeptonZeroJet2018__SF_1J_i"] = SFSelection + OneJet + " && L2MT2>260000"
