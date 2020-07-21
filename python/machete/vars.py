@@ -1,8 +1,8 @@
 met = {
     "varexp" : "met",
     "xmin" : 100,
-    "xmax" : 1000,
-    "nbins" : 20,
+    "xmax" : 2500,
+    "nbins" : 40,
     "unit" : "GeV",
     "xTitle" : "E_{T}^{miss}",
 }
@@ -18,7 +18,7 @@ hardmet = {
 
 lep1Pt = {
     "varexp" : "lep1Pt",
-    "xmin" : 35,
+    "xmin" : 25,
     "xmax" : 1035,
     "nbins" : 20,
     "unit" : "GeV",
@@ -28,8 +28,8 @@ lep1Pt = {
 lep1Pt_soft = {
     "varexp" : "lep1Pt",
     "xmin" : 6,
-    "xmax" : 35,
-    "nbins" : 29,
+    "xmax" : 25,
+    "nbins" : 19,
     "unit" : "GeV",
     "xTitle" : "p_{T}^{lep}",
 }
@@ -145,8 +145,8 @@ bjet2Pt = {
 mt = {
     "varexp" : "mt",
     "xmin" : 0,
-    "xmax" : 600,
-    "nbins" : 20,
+    "xmax" :1200,
+    "nbins" : 40,
     "unit" : "GeV",
     "xTitle" : "m_{T}",
 }

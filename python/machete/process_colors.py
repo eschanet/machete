@@ -19,3 +19,11 @@ colors["dijets_fixed"] = ROOT.TColor.GetColor("#CCCCCC")
 colors["multiboson"] = ROOT.TColor.GetColor("#dc322f")
 colors["vh"] = ROOT.TColor.GetColor("#dc712f")
 colors["other"] = ROOT.TColor.GetColor("#f2d706")
+
+# for strong1L paper
+colors["ttbar"] = ROOT.TColor.GetColor("#9AFF99")
+colors["singletop"] = ROOT.TColor.GetColor("#0000cc")
+colors["wjets"] = ROOT.TColor.GetColor("#3299FF")
+colors["zjets"] = ROOT.TColor.GetColor("#CCCC33")
+colors["diboson"] = ROOT.TColor.GetColor("#999999")
+colors["ttv"] = ROOT.TColor.GetColor("#000066")

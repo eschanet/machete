@@ -2,11 +2,17 @@
 import ROOT
 import os
 
-def list_treenames(file):
+def list_treenames(file, match):
+    try:
+        basestring
+    except NameError:
+        basestring = str
+    
     tf = ROOT.TFile.Open(file,"READ") if isinstance(file,basestring) else file
     trees_list = []
     for key in tf.GetListOfKeys():
-        trees_list.append(key.GetName())
+        if str(match) in key.GetName():
+            trees_list.append(key.GetName())
     tf.Close()
     return trees_list
 

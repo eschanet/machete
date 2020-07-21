@@ -15,8 +15,6 @@ from MPF.treePlotter import TreePlotter
 from MPF import globalStyle as gst
 from MPF.legend import Legend as leg
 
-import MPF.vars_mpf as vars
-
 import normfactors as nf
 import os
 import argparse
@@ -212,7 +210,7 @@ def run():
             overflow=True
         else:
             overflow=False
-            
+
         if args.contribution:
             tp = TreePlotter(plotType="BGContributionPlot",inputLumi=0.001*(inputlumi/139), targetLumi=inputlumi, addOverflowToLastBin=overflow, normStack=args.normalize)#43.5844
         elif args.significance:

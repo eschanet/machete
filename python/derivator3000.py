@@ -8,8 +8,8 @@ from slurmy import JobHandler, Slurm, Singularity3Wrapper, SuccessTrigger
 sw = Singularity3Wrapper('/cvmfs/atlas.cern.ch/repo/containers/images/singularity/x86_64-slc6.img')
 jh = JobHandler(wrapper = sw,work_dir="/project/etp3/eschanet/collect", name="Reco_tf", run_max=50)
 
-outdir="/project/etp1/eschanet/derivations/TRUTH3"
-indir="/project/etp1/eschanet/EVNT"
+outdir="/project/etp1/eschanet/derivations/private/TRUTH3"
+indir="/project/etp1/eschanet/EVNT/atlas"
 
 run_script = """
 echo Running on host `hostname`
@@ -58,15 +58,17 @@ totalEvents = 10000 # per file
 for indirectory,subdir,filenames  in os.walk(indir):
     if indirectory == indir:
         continue
-    # print(indirectory)
+    if not "C1C1_WW" in indirectory:
+        continue
+    print(indirectory)
     for inputfile_path in glob.glob(os.path.join(indirectory, "*.root*")):
         inputfile = os.path.basename(inputfile_path)
-        print(inputfile)
+        # print(inputfile)
         for skipEvents in range(0, totalEvents-maxEvents+1, maxEvents):
             # print("Adding job for inputfile={}, skipEvents={}".format(inputfile, skipEvents))
             dirname = os.path.basename(os.path.normpath(indirectory))
             dirname = dirname.replace("EVNT", "DAOD_TRUTH3").replace("evgen", "deriv")
-            outputfile = os.path.join(outdir,dirname,inputfile)
+            outputfile = os.path.join(outdir,dirname,inputfile).replace("EVNT", "DAOD_TRUTH3")
             myoutdir = os.path.join(outdir,dirname)
             outputfile = outputfile+"_{}".format(skipEvents)
 

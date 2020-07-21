@@ -41,13 +41,15 @@ class CrossSectionDB:
         )
 
     def getMatch(self, field, dsid, etag=None):
+        dsid = int(dsid)
         try:
             if etag:
                 mask = (self.db["dataset_number"] == dsid) & (self.db["etag"] == etag)
             else:
-                mask = self.db["dataset_number"] == dsid
+                mask = (self.db["dataset_number"] == dsid)
             df = self.db.loc[mask, :]
-        except:
+        except Exception as e: # work on python 3.x
+            print('Failed to get value: '+ str(e))
             return None
 
         if len(df.index) > 1:
@@ -56,6 +58,7 @@ class CrossSectionDB:
                 + str(dsid)
                 + " found! Picking first one ..."
             )
+
         return df[field].values[0]
 
     def xsec(self, dsid, etag=None):
